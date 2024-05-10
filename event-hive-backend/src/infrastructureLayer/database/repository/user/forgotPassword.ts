@@ -13,7 +13,7 @@ export const forgotPassword = async (
             const responseData: StoreData = {
                 _id: user._id,
                 name: user.first_name,
-                email : user.email
+                email : user.email as string
               };
             return responseData;
            }

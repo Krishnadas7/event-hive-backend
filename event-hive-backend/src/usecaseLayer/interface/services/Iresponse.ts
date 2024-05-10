@@ -2,7 +2,8 @@ import { IUser } from "../../../domainLayer/user";
 
 export interface StoreData{
     _id: string;
-  name: string;
+  name?: string;
+  first_name?:string;
   email : string;
   token?:string;
 }
@@ -11,8 +12,8 @@ export interface IResponse<T = StoreData | string>{
   success : boolean,
   message ?: string,
   data?: T,
-  accessToken?:any,
-  refreshToken? : any
+  userAccessToken?:any,
+  userRefreshToken? : any
 
 }
 

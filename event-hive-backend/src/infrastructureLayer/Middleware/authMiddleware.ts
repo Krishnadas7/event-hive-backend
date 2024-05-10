@@ -16,40 +16,40 @@ class AuthMiddleware {
     static async protectUser(req: Request, res: Response, next: NextFunction):Promise<void> {
         const userRepository = new UserRepository(UserModel);
 
-        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
-        console.log('token is misslewarr',token);
+        const token :any= req.cookies?.userAccessToken || req.header("Authorization")?.split(' ')[1]
+        console.log('accesstoken ',token);
         
         if (!token) {
-            res.status(401).send('Not authorized, no token');
+            res.status(401).json({message:'Not authorized, no token'});
         }
 
         // Get the access token secret from your config or environment variables
 
         const accessTokenSecret = process.env.ACCESS_TOKEN_KEY as string
+        console.log('accesskeyy',accessTokenSecret);
         
-        const decoded : any =jwt.verify(token, accessTokenSecret,(err:any)=>{
-          // console.log('token is expired');
-          return res.status(401).json({success:false,message:"token is expired"})
+        try {
           
-        })
-        if(decoded){
-          console.log('token is verified');
-        }else{
-          console.log('its okay');
-          
-        }
+        
+        const decoded : any = jwt.verify(token, accessTokenSecret)
+
+        // console.log('decoded -----',decoded.id);
+        
+        
          
             // Check if the user exists
-            const user: any = await userRepository.findUser(decoded.email);
-            console.log('middleware user',user);
+            const user: any = await UserModel.findOne({email:decoded.email});
             
             if (!user) {
-               
+               res.status(401).json({ error: 'Unauthorized3' });
             }
             // Attach the user to the request for further use
             req.user = user;
             next(); // Pass the user to the next middleware
-        
+          } catch (error) {
+            // console.error(error);
+            res.status(401).json({ error: 'Unauthorized' });
+          }
     }
 }
 

@@ -14,7 +14,7 @@ export const createUser=async (
     await user.save()
     const responseData: StoreData = {
         _id:user._id,
-        email:user.email,
+        email:user.email as string,
         name:user.first_name,
     }
     return responseData

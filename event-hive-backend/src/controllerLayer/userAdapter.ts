@@ -49,13 +49,13 @@ export class UserAdapter {
       console.log('login user error showing ====',user);
       
       if (user) {
-        res.cookie("accessToken", user.accessToken, {
+        res.cookie("userAccessToken", user.userAccessToken, {
           httpOnly:true,
           secure:true,
           sameSite: "strict",
-          maxAge:  20*1000
+          maxAge:  2*60*1000
       });
-          res.cookie("refreshToken", user.refreshToken, {
+          res.cookie("userRefreshToken", user.userRefreshToken, {
               httpOnly: true,
               secure:true,
               sameSite: "strict",
@@ -67,12 +67,43 @@ export class UserAdapter {
           success: user.success,
           data: user.data,
           message: user.message,
-          accessToken:user.accessToken,
-          refreshToken:user.refreshToken
+          userAccessToken:user.userAccessToken,
+          userRefreshToken:user.userRefreshToken
       });
   } catch (error) {
       // Handle errors
       next(error)
+  }
+}
+
+async googleAuth (req:Req,res:Res,next:Next){
+  try {
+    
+    const user = await this.userusecase.googleAuth(req.body)
+    console.log('userr adapter',user)
+    if (user) {
+      res.cookie("userAccessToken", user.userAccessToken, {
+        httpOnly:true,
+        secure:true,
+        sameSite: "strict",
+        maxAge:  120000
+    });
+        res.cookie("userRefreshToken", user.userRefreshToken, {
+            httpOnly: true,
+            secure:true,
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days for refreshToken
+        });
+    }
+     res.status(user.status).json({
+        success:user.success,
+        data:user.data,
+        message:user.message,
+        accessToken:user.userAccessToken,
+        refreshToken:user.userRefreshToken
+    })
+  } catch (error) {
+    next(error)
   }
 }
 

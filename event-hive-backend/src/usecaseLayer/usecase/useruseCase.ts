@@ -9,7 +9,7 @@ import { forgotPassword } from './user/forgotPassword';
 import { verifyEmail } from './user/sendEmail';
 import INodemailer from '../interface/services/Inodemailer';
 import { IRequestValidator } from '../interface/repository/IvalidareRepository';
-
+import { googleAuth } from './user/googleAuth';
 
 export class UserUseCase{
     private readonly userRepository : IUserRepository;
@@ -78,6 +78,17 @@ export class UserUseCase{
             this.jwt,
             email,
             password
+        )
+    }
+    async googleAuth({first_name,email,password}:{first_name:string;email:string;password:string}){
+        return googleAuth(
+          this.requestValidator,
+          this.userRepository,
+          this.bcrypt,
+          this.jwt,
+          first_name,
+          email,
+          password
         )
     }
 

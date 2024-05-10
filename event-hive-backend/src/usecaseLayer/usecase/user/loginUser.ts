@@ -33,19 +33,19 @@ export const loginUser = async (
 
             
             
-            const { accessToken, refreshToken }:any =await jwt.createJWT(user._id, user.email, "user", user.first_name);
+            const { accessToken, refreshToken }:any =await jwt.createJWT(user._id, user.email as string, "user", user.first_name as string);
             user.refreshToken=refreshToken
             const responseData: StoreData = {
                 _id: user._id,
                 name: user.first_name,
-                email: user.email
+                email: user.email as string
             }
 
             return {
                 status: 200,
                 success: true,
-                accessToken: accessToken,
-                refreshToken: refreshToken,
+                userAccessToken: accessToken,
+                userRefreshToken: refreshToken,
                 data: responseData,
                 message: `Login successful, welcome ${user.first_name}`
             }

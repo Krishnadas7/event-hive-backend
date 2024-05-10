@@ -7,6 +7,8 @@ class JwtPassword implements Ijwt{
      async createJWT(userid: string, email: string, role: string, first_name: string): Promise<{ accessToken: string, refreshToken: string }> {
             const accessTokenKey : any = process.env.ACCESS_TOKEN_KEY
             const refreshTokenKey : any = process.env.REFRESH_TOKEN_KEY
+            console.log(userid,email,role,first_name);
+            
             if(accessTokenKey && refreshTokenKey){
             const accessToken: string = jwt.sign(
                 { id: userid, email: email, role: role, name: first_name },
@@ -20,12 +22,13 @@ class JwtPassword implements Ijwt{
                 { expiresIn: '30d' } // Adjust as needed
             );
             const user = await UserModel.findOne({email})
+           console.log('user from jwt service',user);
            
             if (user) {
                 user.refreshToken = refreshToken;
                 try {
                     await user.save();
-                    const userFromDB = await UserModel.findOne({ email });
+                    // const userFromDB = await UserModel.findOne({ email });
                 } catch (error) {
                     throw error;
                 }
