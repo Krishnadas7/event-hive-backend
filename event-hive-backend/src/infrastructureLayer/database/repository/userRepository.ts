@@ -7,6 +7,10 @@ import { IUserRepository } from "../../../usecaseLayer/interface/repository/Iuse
 import { blockUser } from "./user/blockUser";
 import { IforgotPassword } from "../../../usecaseLayer/interface/services/Iresponse";
 import { forgotPassword } from "./user/forgotPassword";
+import { uploadUserImage } from "./user/updateUserImage";
+import { updatePassword } from "./user/updatePassword";
+import {updateProfile} from './user/updateProfile'
+import { getRandomUser } from "./user/getRandomUser";
 
 export class UserRepository implements IUserRepository{
     constructor(private readonly usersModel:typeof UserModel){}
@@ -23,4 +27,16 @@ export class UserRepository implements IUserRepository{
     async forgotPassword(newPassword: IforgotPassword): Promise<StoreData> {
         return forgotPassword(newPassword, this.usersModel);
       }
+     async uploadProfileImage(image: string, id: string):Promise<Boolean> {
+        return uploadUserImage(image,id,this.usersModel)
+    }
+     async updatePassword(newPassword: string,email:string): Promise<Boolean> {
+        return updatePassword(newPassword,email,this.usersModel)
+    }
+    async updateProfile(first_name: string, last_name: string, qualification: string, bio: string, socialmedialink1: string, socialmedialink2: string, id: string): Promise<IUser | null> {
+        return updateProfile(first_name,last_name,qualification,bio,socialmedialink1,socialmedialink2,id,this.usersModel)
+    }
+    async getRandomUser(userId: string): Promise<IUser | null> {
+         return getRandomUser(userId,this.usersModel)
+    }
 }

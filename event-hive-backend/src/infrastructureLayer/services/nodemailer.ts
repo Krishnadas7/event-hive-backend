@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import INodemailer from '../../usecaseLayer/interface/services/Inodemailer'
+import jwt from 'jsonwebtoken'
 
 
 class Nodemailer implements INodemailer {
@@ -13,6 +14,42 @@ class Nodemailer implements INodemailer {
         otp += digits[Math.floor(Math.random() * 10)];
       }
       return otp;
+    }
+    async sendEmailforForgotPassword(email:string,first_name:string):Promise<string|undefined>{
+      try {
+
+        let forgotToken:string = jwt.sign(
+          {email:email},
+          'forgotToken123',
+          {expiresIn:'5m'}  
+        )
+        console.log('ddd tol',forgotToken);
+        let ffff=jwt.verify(forgotToken,'forgotToken123')
+          
+        // console.log(email,first_name)
+        const transporter =await nodemailer.createTransport({
+          host:"smtp.gmail.com",
+          port:587,
+          secure:false,
+          requireTLS:false,
+          auth:{
+            user:'skrishnadas38@gmail.com',
+            pass:  'jfne dimd aggq uwix',
+          }
+        })
+        const mailOption ={
+          from:'skrishnadas38@gmail.com',
+          to:email,
+          subject:'LINK FOR FORGOT PASSWORD',
+          html:`<div> <a href='http://localhost:5173/user/new-password?forgotToken=${forgotToken}'>reset your passowrd please click here<a/><div/>`
+        }
+        
+        await transporter.sendMail(mailOption)
+        console.log(`email sent to your registerd email ${email}`)
+        return 'please check your email'
+      } catch (error) {
+        `Unable to send email verification email to ${email}: ${error}`
+      }
     }
   
     //to send email for verification
@@ -60,6 +97,51 @@ class Nodemailer implements INodemailer {
           `Unable to send email verification email to ${email}: ${error}`
         );
       }
+    }
+    async sendEmailForCompanyRegistration(company_email:string,company_name:string){
+       try {
+        console.log(company_email,company_name,'from node')
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 587,
+          secure: false,
+          requireTLS: false,
+          auth: {
+            user: 'skrishnadas38@gmail.com',
+            pass: 'jfne dimd aggq uwix',
+          },
+        });
+  
+        if (this.otps) {
+          this.otps.clear();
+        }
+        const otp = this.generateOTP();
+        this.otps.set(company_email, otp);
+        console.log(this.otps);
+  
+        const mailOptions = {
+          from: "skrishnadas38@gmail.com",
+          to: company_email,
+          subject: "Email Verification",
+          html: `
+          <div>
+            <div style="margin-bottom: 10px">
+              Hello ${company_name}, Welcome to <strong>Event hive</strong>! We are excited to have you on board. To get started, please verify your email address:
+            </div>
+            <div style="width: 75%; margin: 0 auto; background-color: black; color: white; padding: 4px; font-size: 3rem; text-align: center;">
+              <strong style="text">${otp}</strong>
+            </div>
+          </div>
+        `,
+        };
+  
+        await transporter.sendMail(mailOptions);
+        return otp;
+       } catch (error) {
+        throw new Error(
+          `Unable to send email verification email to ${company_email}: ${error}`
+        );
+       }
     }
   
     async sendMessageToEmail(

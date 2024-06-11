@@ -53,7 +53,7 @@ export class UserAdapter {
           httpOnly:true,
           secure:true,
           sameSite: "strict",
-          maxAge:  2*60*1000
+          maxAge:  900000
       });
           res.cookie("userRefreshToken", user.userRefreshToken, {
               httpOnly: true,
@@ -86,7 +86,7 @@ async googleAuth (req:Req,res:Res,next:Next){
         httpOnly:true,
         secure:true,
         sameSite: "strict",
-        maxAge:  120000
+        maxAge:  900000
     });
         res.cookie("userRefreshToken", user.userRefreshToken, {
             httpOnly: true,
@@ -110,7 +110,7 @@ async googleAuth (req:Req,res:Res,next:Next){
   
  async sendOtpForgotPassword(req:Req,res:Res,next:Next){
     try {
-        const user = await this.userusecase.sendOtpFogotPassword(req.body);
+        const user = await this.userusecase.sendEmailFogotPassword(req.body);
         res.status(user.status).json({
           success: user.success,
           message: user.message,
@@ -118,6 +118,18 @@ async googleAuth (req:Req,res:Res,next:Next){
       } catch (err) {
         next(err);
       }
+ }
+ async tokenValidation(req:Req, res:Res ,next: Next){
+    try {
+      console.log('useradapter===',req.body)
+      const token = await this.userusecase.tokenValidation(req.body)
+      res.status(token.status).json({
+        success:token.success,
+        message:token.message
+      })
+    } catch (error) {
+       next(error)
+    }
  }
 
  async sendEmail(req: Req, res: Res, next: Next) {
@@ -133,6 +145,9 @@ async googleAuth (req:Req,res:Res,next:Next){
       next(err);
     }
   }
+  // async tokenValidation(req: Req,res: Res, next: Next) {
+  //   const token = await this.userusecase.tokenValidation(req.body)
+  // }
 
   async emailVerification(req: Req, res: Res, next: Next) {
     try {
@@ -153,9 +168,10 @@ async googleAuth (req:Req,res:Res,next:Next){
     }
   }
 
-  async sednOtpFogotPassword(req: Req, res: Res, next: Next) {
+  async sendEmailForgotPassword(req: Req, res: Res, next: Next) {
     try {
-      const user = await this.userusecase.sendOtpFogotPassword(req.body);
+      let userAccessToken = req.cookies.userAccessToken
+      const user = await this.userusecase.sendEmailFogotPassword(req.body);
       res.status(user.status).json({
         success: user.success,
         message: user.message,
@@ -166,6 +182,7 @@ async googleAuth (req:Req,res:Res,next:Next){
 }
     async fogotPassword(req: Req, res: Res, next: Next) {
         try {
+          console.log('from forgot password adapter  ',req.body)
           const newUser = await this.userusecase.forgotPassword(req.body);
           newUser &&
             res.cookie("userjwt", newUser, {
@@ -183,5 +200,113 @@ async googleAuth (req:Req,res:Res,next:Next){
           next(err);
         }
       }
- 
+      async profileImageUpdate( req:Req ,res: Res , next: Next) {
+        try {
+          console.log(req.file)
+          const obj={
+            image:req.file,
+            id:req.body.id,
+            email:req.body.email
+          }
+          console.log('==============',req.body)
+          const imageUpdate = await this.userusecase.uploadProfileImage(obj)
+
+          res.status(imageUpdate.status).json({
+            success: imageUpdate.success,
+            message: imageUpdate.message,
+            data: imageUpdate.data
+          });
+        } catch (error) {
+          next(error)
+        }
+       
+
+      }
+    async resetPassword(req: Req,res: Res,next: Next){
+      try {
+        const passwordUpdated = await this.userusecase.resetPassword(req.body)
+        res.status(passwordUpdated.status).json({
+        success:passwordUpdated.success,
+        message:passwordUpdated.message
+        })
+      } catch (error) {
+        next(error)
+      }
+    }
+    async profileUpdate(req: Req,res: Res, next: Next){
+      const token = req.cookies.userAccessToken
+      console.log('user access token from adapter',token)
+      const {first_name,last_name,qualification,bio,socialmedialink1,socialmedialink2} = req.body
+      let obj={
+        first_name,
+        last_name,
+        qualification,
+        bio,
+        socialmedialink1,
+        socialmedialink2,
+        token
+      }
+      try {
+        req.body.token=token
+        const profileUpdate = await this.userusecase.updateProfile(obj)
+        res.status(profileUpdate.status).json({
+          success:profileUpdate.success,
+          message:profileUpdate.message,
+          data:profileUpdate.data
+        })
+      } catch (error) {
+        next(error)
+      }
+     
+      
+    }
+    async userData (req: Req,res: Res,next: Next){
+      try {
+        const email : any= req.query.email 
+        const user = await this.userusecase.userData(email)
+        res.status(user.status).json({
+          success:user.success,
+          message:user.message,
+          data:user.data
+        })
+      } catch (error) {
+        next(error)
+      }
+    }
+    async getRandomUser (req: Req,res: Res,next: Next){
+      try {
+        const userId : any= req.query.userId 
+        const user = await this.userusecase.getRandomUser(userId)
+        res.status(user.status).json({
+          success:user.success,
+          message:user.message,
+          data:user.data
+        })
+      } catch (error) {
+        next(error)
+      }
+    }
+
+    async getImage(req: Req, res: Res, next: Next) {
+      try {
+        const email = req.query.email;
+        const getUserImage = await this.userusecase.getImage(email as string);
+        console.log('res from adapter', getUserImage);
+        return res.status(getUserImage.status).json({
+          success: getUserImage.success,
+          message: getUserImage.message,
+          data: getUserImage.data
+        });
+      } catch (error) {
+        return next(error);
+      }
+    }
+    
+    // async tokenValidation (req: Req,res: Res, next: Next){
+    //   try { 
+    //     const validation = await this.userusecase.tokenValidation(req.body)
+    //   } catch (error) {
+    //     next(error)
+    //   }
+    // }
 }

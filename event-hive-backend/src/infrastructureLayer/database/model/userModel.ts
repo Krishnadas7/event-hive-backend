@@ -25,15 +25,27 @@ const userSchema: Schema = new Schema<IUser & Document>(
             type:Boolean,
             default:false
         },
+        bio:{
+            type:String,
+        },
+        socialmedialink1:{
+            type:String
+        },
+        socialmedialink2:{
+            type:String
+        },
         place:{
             type:String,
         },
         age:{
             type:Number
         },
-        qualification:{
+        profileImage:{
             type:String
         },
+        qualification:{
+            type:String
+        },      
         password:{
             type:String,
             required:true

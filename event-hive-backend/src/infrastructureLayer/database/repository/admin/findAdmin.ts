@@ -6,6 +6,7 @@ export const findAdmin = async(
 ) =>{
     try {
         const existingAdmin = await adminModel.findOne({email:email})
+        
         return existingAdmin
     } catch (error) {
         throw error

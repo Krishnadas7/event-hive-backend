@@ -33,7 +33,7 @@ export const googleAuth = async (
                }
             const creatingNewUser  = await userRepository.createUser(newUser)
             
-           const { accessToken, refreshToken }:any =await jwt.createJWT(creatingNewUser._id, creatingNewUser.email, "user",creatingNewUser.first_name as string);
+           const { accessToken, refreshToken }:any =await jwt.createJWT(creatingNewUser._id as string, creatingNewUser.email as string, "user",creatingNewUser.first_name as string);
            const responseData: StoreData = {
             _id: creatingNewUser._id,
             name: creatingNewUser.first_name,

@@ -14,16 +14,17 @@ password:string
 ): Promise<IResponse> => {
  try {
     const admin : IAdmin | null = await adminRepository.findAdmin(email)
-
+    console.log('admin from usecase',admin)
     if(admin && admin._id){
       const match : boolean = await bcrypt.compare(password,admin.password)
       if(match){
-       const token = jwt.createJWT(
+       const {accessToken,refreshToken} =await jwt.createJWT(
         admin._id,
         admin.email,
         "admin",
         admin.name
        )
+       console.log('admin token',accessToken,refreshToken)
 
        const responseData : StoreData ={
         _id:admin._id,
@@ -34,7 +35,8 @@ password:string
         status:200,
         success:true,
         data:responseData,
-      //   token:token,
+        adminAccessToken:accessToken,
+        adminRefreshToken:refreshToken,
         message:`login successfully welcome ${admin.name}`
        }
       }

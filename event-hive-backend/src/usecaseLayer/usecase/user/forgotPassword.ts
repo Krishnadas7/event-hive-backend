@@ -21,7 +21,7 @@ export const forgotPassword = async (
         };
         const forgotUser = await userRepository.forgotPassword(newPassword);
   
-          const token = jwt.createJWT(forgotUser._id as string, forgotUser.email, "user", forgotUser.name as string);
+          const token = jwt.createJWT(forgotUser._id as string, forgotUser.email as string, "user", forgotUser.name as string);
           return {
             status: 200,
             success: true,

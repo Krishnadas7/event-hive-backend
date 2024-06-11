@@ -24,7 +24,7 @@ export const createUser =async (
    //       success:false,
    //       message:'password and confirm password not match'}
    //  }
-   console.log(password,confirm_password);
+  //  console.log(password,confirm_password);
    
    const user = await userRepository.findUser(email)
    if(!user){
@@ -37,6 +37,7 @@ export const createUser =async (
         email,
         is_verified:true,
         mobile,
+        profileImage:'',
         password:hashedPassword,
      }
      const createnewUser = await userRepository.createUser(newUser)
