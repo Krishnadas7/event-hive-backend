@@ -8,6 +8,11 @@ export interface IEventRepository{
     getEventWithCompany():Promise<any>;
     blockEvent(eventId:string):Promise<boolean>;
     getEvent(companyId:string):Promise<any>;
-    userEventList():Promise<IEvent[]>;
+    userEventList(pagination:number):Promise<IEvent[]>;
     selectedEvent(eventId:string):Promise<any>;
+    searchEvent(search:string):Promise<IEvent[]>;
+    filterEvents(type:string,ticket:string,date:string):Promise<IEvent[]>;
+    liveEvents(companyId:string):Promise<IEvent[]>;
+    allMembers(eventId:string):Promise<any>;
+    closeEvent(eventId:string):Promise<boolean>;
 }

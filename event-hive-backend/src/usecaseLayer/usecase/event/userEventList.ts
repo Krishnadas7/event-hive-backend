@@ -9,10 +9,11 @@ import { Document, Model } from "mongoose";
 export const userEventList = async (
     eventRepository:IEventRepository,
     s3service:Is3bucket,
-    s3:S3Client
+    s3:S3Client,
+    pagination:number
 ):Promise<IResponse> =>{
     try {
-        const events  = await eventRepository.userEventList()
+        const events  = await eventRepository.userEventList(pagination)
         const urlPromises = events.map(async(event:any,index:Number)=>{
             try {
                 const url =  await s3service.getImages(s3,event.event_poster)

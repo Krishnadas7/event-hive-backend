@@ -1,10 +1,15 @@
-import { createClient } from 'redis';
 import ErrorResponse from "../../handler/errorResponse";
 import { ICompanyRepository } from "../../interface/repository/IcompanyRepository";
 import IHashPassword from "../../interface/services/IhashPassword";
 import { IRedis } from '../../interface/services/Iredis';
 import INodemailer from '../../interface/services/Inodemailer';
 import { ICResponse } from '../../interface/services/Iresponse';
+// import { createClient } from 'redis';
+// export const redisClient = createClient();
+// redisClient.on('error', (err) => console.error('Redis Client Error', err));
+// redisClient.connect().catch(console.error);
+import { connectToRedis } from "../../../infrastructureLayer/config/redis";
+
 
 export const sendEmailforCompany = async (
    CompanyRepository:ICompanyRepository,
@@ -20,10 +25,11 @@ export const sendEmailforCompany = async (
     company_description:string,
 ):Promise<ICResponse> =>{
     try {
+        await connectToRedis()
         const companyData = await CompanyRepository.findCompany(company_email)
-        console.log(companyData)
+        console.log('companyData',companyData)
         if(!companyData){
-          console.log(company_email,company_name)
+          console.log('name and email',company_email,company_name)
         const sendEmailOtp = await nodemailer.sendEmailForCompanyRegistration(company_email,company_name)
         console.log('otp from sendemailfor compay',sendEmailOtp)
         const hashedPassword = await bcrypt.createHash(password)

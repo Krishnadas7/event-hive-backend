@@ -3,6 +3,9 @@ import IHashPassword from "../../interface/services/IhashPassword";
 import { ICResponse } from "../../interface/services/Iresponse";
 import ErrorResponse from "../../handler/errorResponse";
 import { IRedis } from "../../interface/services/Iredis";
+// const { createClient } = require('redis');
+import { disconnectFromRedis } from "../../../infrastructureLayer/config/redis";
+// const redisClient = createClient();
 
 export const createCompany = async (
     companyRepository:ICompanyRepository,
@@ -40,6 +43,10 @@ export const createCompany = async (
         password:dataFromRedis.password
        }
        const newCompany = await companyRepository.createCompany(company)
+       if(newCompany){
+        await disconnectFromRedis()
+       }
+      
        return {
         status:200,
         success:true,

@@ -5,8 +5,8 @@ import adminRoute from '../routes/adminRoute';
 import companyRoute from '../routes/companyRoute'
 import conversationRoute from '../routes/conversationRoute'
 import messageRoute from '../routes/messageRoute'
-import redis from 'redis'
-import { createClient } from 'redis';
+// import redis from 'redis'
+// import { createClient } from 'redis';
 import errorHandler from '../../usecaseLayer/handler/errorHanadler';
 import path from 'path'
 import cors from 'cors';
@@ -17,9 +17,9 @@ import { Server, Socket } from 'socket.io';
 const envFilePath = path.resolve(__dirname, '../../.././../.env');
 dotenv.config({ path: envFilePath })
 export const app = express();
-export const redisClient = createClient();
-redisClient.on('error', (err) => console.error('Redis Client Error', err));
-redisClient.connect().catch(console.error);
+// export const redisClient = createClient();
+// redisClient.on('error', (err) => console.error('Redis Client Error', err));
+// redisClient.connect().catch(console.error);
 const io = require('socket.io')(8900,{
     cors:{
         orign:"http://localhost:3003"
@@ -85,6 +85,7 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true // Allow cookies to be sent along with requests
 }));
+
 app.use(cookieParser());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));

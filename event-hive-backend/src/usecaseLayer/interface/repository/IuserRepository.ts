@@ -11,4 +11,6 @@ export interface IUserRepository{
     updatePassword(newPassword:string,email:string):Promise<Boolean>;
     updateProfile(first_name:string,last_name:string,qualification:string,bio:string,socialmedialink1:string,socialmedialink2:string,id:string):Promise<IUser | null>;
     getRandomUser(userId:string): Promise<IUser | null>;
+    memberExist(userId:string,email:string):Promise<boolean>;
+    addTeam(team:string[],user_id:string):Promise<boolean>;
 }

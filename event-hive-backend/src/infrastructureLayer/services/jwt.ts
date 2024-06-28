@@ -12,7 +12,7 @@ class JwtPassword implements Ijwt{
             const accessToken: string = jwt.sign(
                 { id: userid, email: email, role: role, name: first_name },
                 accessTokenKey,
-                { expiresIn: '15m' } // Adjust as needed
+                { expiresIn: '40m' } // Adjust as needed
             );
              
             const refreshToken: string = jwt.sign(

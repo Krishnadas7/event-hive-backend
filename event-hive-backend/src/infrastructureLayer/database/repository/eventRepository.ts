@@ -8,6 +8,11 @@ import { blockEvent } from "./event/blockEvent";
 import { getEvent } from "./event/getEvent";
 import { userEventList } from "./event/userEventList";
 import { selectedEvent } from "./event/selectedEvent";
+import { searchEvent } from "./event/searchEvent";
+import { filterEvents } from "./event/filterEvents";
+import { liveEvents } from "./event/liveEvents";
+import { allMembers } from "./event/allMembers";
+import { closeEvent } from "./event/closeEvent";
 
 export class EventRepository implements IEventRepository{
     constructor(private readonly eventModels:typeof EventModel){}
@@ -26,10 +31,25 @@ export class EventRepository implements IEventRepository{
     async getEvent(companyId: string): Promise<any> {
         return getEvent(companyId,this.eventModels)
     }
-    async userEventList(): Promise<IEvent[]> {
-        return userEventList(this.eventModels)
+    async userEventList(pagination:number): Promise<IEvent[]> {
+        return userEventList(pagination,this.eventModels)
     }
     async selectedEvent(eventId: string): Promise<any> {
         return selectedEvent(eventId,this.eventModels)
+    }
+    async  searchEvent(search: string): Promise<IEvent[]> {
+        return searchEvent(search,this.eventModels)
+    }
+    async filterEvents(type: string, ticket: string, date: string): Promise<IEvent[]> {
+        return filterEvents(type,ticket,date,this.eventModels)
+    }
+    async liveEvents(companyId: string): Promise<IEvent[]> {
+        return liveEvents(companyId,this.eventModels)
+    }
+    async allMembers(eventId: string): Promise<any> {
+        return allMembers(eventId,this.eventModels)
+    }
+    async closeEvent(eventId: string): Promise<boolean> {
+        return closeEvent(eventId,this.eventModels)
     }
 }

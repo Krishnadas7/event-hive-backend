@@ -8,8 +8,16 @@ export class EventAdapter{
  }
   async createEvent(req: Req,res: Res,next: Next){
     try {
+      console.log('event======',req.body)
       const event_poster = req.file
+      let amount
+      if(req.body.ticket_type==='paid'){
+        amount=req.body.ticket_amount
+      }else{
+        amount='0'
+      }
       let obj:any  ={
+        participants:req.body.participants,
          event_name:req.body.event_name,
          event_type:req.body.event_type,
          start_date:req.body.start_date,
@@ -20,6 +28,8 @@ export class EventAdapter{
          event_description:req.body.event_description,
          company_id:req.body.company_id,
          event_poster:event_poster,
+         ticket:req.body.ticket_type,
+         amount:amount
       }
        const newEvent = await this.eventusecase.createEvent(obj)
         res.status(newEvent.status).json({
@@ -63,15 +73,30 @@ export class EventAdapter{
       console.log('geteventsss====',details)
       res.status(details.status).json({
         success:details.success,
-        message:details.message
+        message:details.message,
+        data:details.data
       })
     }catch(error){
      console.log(error)
     }
   }
+  async liveEvents (req: Req,res: Res,next: Next) {
+    try{
+      const companyId = req.query.companyId
+      const events = await this.eventusecase.liveEvents(companyId as string)
+      res.status(events.status).json({
+        success:events.success,
+        message:events.message,
+        data:events.data
+      })
+    }catch(error){
+      console.log(error)
+    }
+  }
   async userEventList (req: Req,res: Res,next: Next){
-     try {
-       const events = await this.eventusecase.userEventList()
+     try { 
+      const pagination : any= req.query.pagination 
+       const events = await this.eventusecase.userEventList(pagination)
        
        if(events){
         res.status(events.status).json({
@@ -104,6 +129,63 @@ export class EventAdapter{
       })
     } catch (error) {
       console.log(error)
+    }
+  }
+  async searchEvent (req: Req,res: Res,next: Next){
+    try {
+      const search = req.query.search
+      const event = await this.eventusecase.searchEvent(search as string)
+      res.status(event.status).json({
+        success:event.success,
+        message:event.message,
+        data:event.data
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async filterEvents(req: Req,res: Res,next: Next){
+    try {
+      let obj={
+        type:req.query.type,
+        ticket:req.query.ticket,
+        date:req.query.date
+      }
+      const event = await this.eventusecase.filterEvents(obj as any)
+      res.status(event.status).json({
+        success:event.success,
+        message:event.message,
+        data:event.data
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async allMembers(req: Req,res: Res,next: Next){
+   try {
+    const eventId = req.query.eventId
+     const members = await this.eventusecase.allMembers(eventId as string)
+     console.log('dslkdsljkjdsljkjsdlkjdsflkj',members.data[0].userDetails)
+     res.status(members.status).json({
+      success:members.success,
+      message:members.message,
+      data:members.data
+    })
+   } catch (error) {
+    next(error)
+   }
+  }
+  async closeEvent(req:Req,res:Res,next:Next){
+    try {
+      const eventId=req.body.eventId
+      const close =  await this.eventusecase.closeEvent(eventId)
+      res.status(close.status).json({
+        success:close.success,
+        message:close.message,
+        data:close.data
+      })
+    } catch (error) {
+      next(error)
     }
   }
 }

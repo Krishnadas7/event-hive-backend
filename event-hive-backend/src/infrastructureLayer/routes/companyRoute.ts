@@ -30,8 +30,17 @@ router.post('/company-profile-edit',AuthMiddleware.protectCompany,upload.single(
 router.post('/event-creation',AuthMiddleware.protectCompany,upload.single('event_poster'),(req: Request,res: Response,next: NextFunction)=>{
   eventAdapter.createEvent(req,res,next)
 })
-router.get('/get-all-company',(req:Request,res:Response,next:NextFunction) =>{
+router.get('/get-all-event',(req:Request,res:Response,next:NextFunction) =>{
   eventAdapter.getCompany(req,res,next)
+})
+router.get('/live-events',(req:Request,res:Response,next:NextFunction) =>{
+  eventAdapter.liveEvents(req,res,next)
+})
+router.get('/all-members',(req:Request,res:Response,next:NextFunction) =>{
+  eventAdapter.allMembers(req,res,next)
+})
+router.post('/close-event',(req:Request,res:Response,next:NextFunction) =>{
+  eventAdapter.closeEvent(req,res,next)
 })
 
 router.post('/refresh-token',async (req:Request,res:Response,next: NextFunction) =>{ 

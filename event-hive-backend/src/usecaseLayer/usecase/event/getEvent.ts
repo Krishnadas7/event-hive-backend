@@ -1,3 +1,4 @@
+import { IEvent } from "../../../domainLayer/event"
 import { IEventRepository } from "../../interface/repository/IeventRepository"
 import { Is3bucket } from "../../interface/services/Is3Services"
 import { S3Client } from "@aws-sdk/client-s3"
@@ -9,11 +10,15 @@ export const getEvent = async (
 )=>{
  try {
     const events = await eventRespository.getEvent(eventId)
-    
+    const urlPromise = events.map(async(event:IEvent,index:number)=>{
+        const url = await s3service.getImages(s3,event.event_poster as string)
+        event.event_poster = url
+    })
+    await Promise.all(urlPromise)
     return{
         status:200,
         success:true,
-        message:'blocked successfully',
+        message:'company events',
         data:events
     }
  } catch (error) {

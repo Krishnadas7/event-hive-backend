@@ -1,7 +1,8 @@
 import { createClient } from "redis";
 import { IRedis } from "../../usecaseLayer/interface/services/Iredis";
 import { ICompany } from "../../domainLayer/company";
-import { redisClient } from "../config/app";
+// const redisClient = createClient();
+import { redisClient } from "../config/redis";
 
  class Redis implements IRedis{
      async dataStoringRedis(obj: any): Promise<string> {

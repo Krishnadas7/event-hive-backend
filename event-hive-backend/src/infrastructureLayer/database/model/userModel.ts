@@ -13,6 +13,9 @@ const userSchema: Schema = new Schema<IUser & Document>(
             type:String,
             required:true,
         },
+        team:{
+            type:[String],
+        },
         mobile:{
             type:String,
             default:''

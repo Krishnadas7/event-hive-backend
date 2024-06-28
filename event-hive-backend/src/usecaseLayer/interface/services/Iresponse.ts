@@ -52,6 +52,16 @@ export interface CompanyData{
   company_name?:string;
   company_email?:string;
 }
+export interface BookingData{
+  _id?: string;                    
+  user_id?: string;                 
+  event_id?: string;               
+  company_id?: string;           
+  booking_date?: string;         
+  payment_status?: string; 
+  payment_amount?: string;      
+  ticket_type?: string;
+}
 export interface ConversationData{
   _id?:string;
   members?:string[];
@@ -76,7 +86,7 @@ export interface ICResponse<T= CompanyData | string>{
   companyAccessToken?:string,
   companyRefreshToken?:string
 }
-export interface IResponse<T = StoreData | string | ConversationData | MessageData |IEvent[]>{
+export interface IResponse<T = StoreData | string | ConversationData | MessageData |IEvent[]|BookingData|boolean>{
   status : number,
   success : boolean,
   message ?: string,

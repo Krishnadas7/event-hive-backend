@@ -7,11 +7,15 @@ export interface IEvent{
     start_date?:string;
     starting_time?:string;
     end_date?:string;
+    participants?:string;
     ending_time?:string;
+    ticket?:string;
+    amount?:string;
     users_limit?:string;
     event_description?:string;
+    live?:string;
     registrations?:string[];
     is_block?:boolean;
-    event_poster?:Express.Multer.File;
+    event_poster?:string;
     company_id?:Types.ObjectId; 
 }

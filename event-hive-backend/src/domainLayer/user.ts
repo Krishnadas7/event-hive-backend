@@ -12,6 +12,7 @@ export interface IUser {
     gender?: string;
     profileImage?:string;
     qualification?: string;
+    team?:string[];
     is_block?: boolean;
     is_verified?: boolean;
     password:string;

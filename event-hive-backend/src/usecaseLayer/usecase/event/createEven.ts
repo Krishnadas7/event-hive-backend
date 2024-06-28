@@ -10,6 +10,7 @@ export const createEvent = async (
     eventRepository:IEventRepository,
     s3service:Is3bucket,
     s3:S3Client,
+    participants:string,
     event_name:string,
     event_type:string,
     start_date:string,
@@ -20,10 +21,13 @@ export const createEvent = async (
     event_description:string,
     company_id:Types.ObjectId,
     event_poster:Express.Multer.File,
+    ticket:string,
+    amount:string
 ):Promise<IEResponse> =>{
 
   try {
     const event:IEvent = {
+      participants,
         event_name,
         event_type,
         start_date,
@@ -33,6 +37,8 @@ export const createEvent = async (
         users_limit,
         event_description,
         company_id,
+        ticket,
+        amount
       }
       const newEvent = await eventRepository.createEvent(event)
       if(newEvent._id){

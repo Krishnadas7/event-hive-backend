@@ -298,7 +298,21 @@ async googleAuth (req:Req,res:Res,next:Next){
           data: getUserImage.data
         });
       } catch (error) {
-        return next(error);
+         next(error);
+      }
+    }
+    async memberexist(req:Req, res:Res, next:Next) {
+      try {
+        const userId = req.query.userId as string
+        const email = req.query.email as string
+        const member = await this.userusecase.memberExist(userId,email)
+        return res.status(member.status).json({
+          success: member.success,
+          message: member.message,
+          data: member.data
+        });
+      } catch (error) {
+        next(error)
       }
     }
     

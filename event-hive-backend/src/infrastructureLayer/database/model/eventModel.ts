@@ -30,7 +30,16 @@ const eventSchema: Schema = new Schema<IEvent & Document>(
         event_description:{
             type:String
         },
+        participants:{
+            type:String
+        },
         event_poster:{
+            type:String
+        },
+        ticket:{
+            type:String
+        },
+        amount:{
             type:String
         },
         company_id: {
@@ -41,6 +50,10 @@ const eventSchema: Schema = new Schema<IEvent & Document>(
         registrations:{
             type:[String],
         },
+        live:{
+            type:String,
+            default:'pending'
+        }
     },{
         timestamps:true
     }

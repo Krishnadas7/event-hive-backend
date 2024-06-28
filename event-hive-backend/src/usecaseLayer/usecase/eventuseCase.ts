@@ -9,6 +9,11 @@ import { blockEvent } from "./event/blockEvent";
 import { getEvent } from "./event/getEvent";
 import { userEventList } from "./event/userEventList";
 import { selectedEvent } from "./event/selectedEvent";
+import { searchEvent } from "./event/searchEvent";
+import { filterEvents } from "./event/filterEvents";
+import { liveEvents } from "./event/liveEvents";
+import { allMembers } from "./event/allMembers";
+import { closeEvent } from "./event/closeEvent";
 export class EventUseCaase {
   private readonly eventRepository :IEventRepository;
   private readonly redis: IRedis
@@ -26,6 +31,7 @@ export class EventUseCaase {
     this.s3 = s3
   }
   async createEvent({
+    participants,
     event_name,
     event_type,
     start_date,
@@ -36,7 +42,10 @@ export class EventUseCaase {
     event_description,
     company_id,
     event_poster,
+    ticket,
+    amount
   }:{
+    participants:string;
     event_name:string;
     event_type:string;
     start_date:string;
@@ -47,11 +56,14 @@ export class EventUseCaase {
     event_description:string;
     company_id:Types.ObjectId;
     event_poster:Express.Multer.File;
+    ticket:string,
+    amount:string
   }){
       return createEvent(
         this.eventRepository,
         this.s3Service,
         this.s3,
+        participants,
         event_name,
         event_type,
         start_date,
@@ -62,6 +74,8 @@ export class EventUseCaase {
         event_description,
         company_id,
         event_poster,
+        ticket,
+        amount
       )
     }
     async getEventWithCompany(){
@@ -85,11 +99,12 @@ export class EventUseCaase {
         eventId
       )
     }
-    async userEventList (){
+    async userEventList (pagination:number){
       return userEventList(
         this.eventRepository,
         this.s3Service,
-        this.s3
+        this.s3,
+        pagination
       )
     }
     async selectedEvent(eventId:string){
@@ -97,6 +112,48 @@ export class EventUseCaase {
         this.eventRepository,
         this.s3Service,
         this.s3,
+        eventId
+      )
+    }
+    async searchEvent(search:string){
+      return searchEvent(
+        this.eventRepository,
+        this.s3Service,
+        this.s3,
+        search
+      )
+    }
+    async filterEvents({type,ticket,date}:{type:string,ticket:string,date:string}){
+      return filterEvents(
+        this.eventRepository,
+        this.s3Service,
+        this.s3,
+        type,
+        ticket,
+        date
+      )
+      
+    }
+    async liveEvents(companyId:string){
+      return liveEvents(
+       this.eventRepository,
+       this.s3Service,
+        this.s3,
+       companyId
+      )
+    }
+    async allMembers(eventId:string){
+      return allMembers(
+        this.eventRepository,
+        this.s3Service,
+        this.s3,
+        eventId
+      )
+    }
+    async closeEvent(eventId:string){
+      console.log(eventId)
+      return closeEvent(
+        this.eventRepository,
         eventId
       )
     }

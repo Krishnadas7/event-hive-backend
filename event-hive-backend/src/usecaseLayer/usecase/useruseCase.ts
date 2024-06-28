@@ -19,6 +19,7 @@ import {updateProfile} from './user/profileUpdate'
 import { userData } from './user/userData';
 import { getRandomUser } from './user/getRandomUser';
 import { getImage } from './user/getImage';
+import { memberExist } from './user/memberExist';
 
 export class UserUseCase{
     private readonly userRepository : IUserRepository;
@@ -230,6 +231,13 @@ export class UserUseCase{
         this.userRepository,
         this.s3Service,
         this.s3,
+        email
+      )
+     }
+     async memberExist(userId:string,email:string){
+      return memberExist(
+        this.userRepository,
+        userId,
         email
       )
      }

@@ -15,6 +15,7 @@ const refreshTokens:any = [];
 const router = express.Router()
 import AuthMiddleware from '../Middleware/authMiddleware';
 import { IUser } from '../../domainLayer/user';
+import { bookingAdapter } from './injections/bookingInjection';
 // import 'dotenv/config'
 const envFilePath = path.resolve(__dirname, '../../../../.env');
 dotenv.config({ path: envFilePath })
@@ -184,11 +185,36 @@ router.get('/all-user',AuthMiddleware.protectUser,async(req: Request, res: Respo
    })
 })
 router.get('/event-for-users',AuthMiddleware.protectUser,async(req: Request, res: Response,next: NextFunction)=>{
-    console.log('rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
   eventAdapter.userEventList(req,res,next)
 })
 router.get('/selected-event',AuthMiddleware.protectUser,async(req: Request, res: Response,next: NextFunction)=>{
   console.log('qurry id',req.query.eventId)
   eventAdapter.selectedEvent(req,res,next)
+})
+router.get('/search-event',async(req: Request, res: Response,next: NextFunction)=>{
+  eventAdapter.searchEvent(req,res,next)
+})
+router.get('/filter-events',async(req: Request, res: Response,next: NextFunction)=>{
+  eventAdapter.filterEvents(req,res,next)
+})
+router.post('/ticket-booking',async(req: Request,res : Response,next: NextFunction)=>{
+  bookingAdapter.ticketBooking(req,res,next)
+})
+router.post('/weebhook',async(req: Request,res : Response,next: NextFunction)=>{
+   console.log('webhook route is called')
+  bookingAdapter.webhook(req,res,next)
+})
+router.get('/all-bookings',async(req: Request,res : Response,next: NextFunction)=>{
+  console.log('all bookin',req.query.userId)
+  bookingAdapter.allBookings(req,res,next)
+})
+router.get('/member-exist',async(req: Request,res : Response,next: NextFunction)=>{
+  userAdapter.memberexist(req,res,next)
+})
+router.get('/live-checking',async(req: Request,res : Response,next: NextFunction)=>{
+  bookingAdapter.liveChecking(req,res,next)
+})
+router.get('/live-listing',async(req: Request,res : Response,next: NextFunction)=>{
+  bookingAdapter.liveListing(req,res,next)
 })
 export default router

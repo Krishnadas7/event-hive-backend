@@ -7,15 +7,8 @@ export const getEvent = async (
     eventModel: typeof EventModel
 ) => {
     try {
-        let query;
-
-        if (Types.ObjectId.isValid(companyId) && companyId.length === 24) {
-            query = { company_id: new Types.ObjectId(companyId) };
-        } else {
-            query = { company_email: companyId };
-        }
-
-        const event = await eventModel.find(query);
+        const event = await eventModel.find({company_id: companyId});
+        console.log('999999999999999999',event)
         return event;
     } catch (error) {
         throw error;

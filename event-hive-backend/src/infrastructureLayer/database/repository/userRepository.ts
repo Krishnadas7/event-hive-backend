@@ -11,6 +11,8 @@ import { uploadUserImage } from "./user/updateUserImage";
 import { updatePassword } from "./user/updatePassword";
 import {updateProfile} from './user/updateProfile'
 import { getRandomUser } from "./user/getRandomUser";
+import { memberExist } from "./user/memberExist";
+import { addTeam } from "./user/addTeam";
 
 export class UserRepository implements IUserRepository{
     constructor(private readonly usersModel:typeof UserModel){}
@@ -38,5 +40,11 @@ export class UserRepository implements IUserRepository{
     }
     async getRandomUser(userId: string): Promise<IUser | null> {
          return getRandomUser(userId,this.usersModel)
+    }
+    async memberExist(userId: string, email: string): Promise<boolean> {
+        return memberExist(userId,email,this.usersModel)
+    }
+    async addTeam(team: string[],user_id:string):Promise<boolean> {
+        return addTeam(team,user_id,this.usersModel)
     }
 }
