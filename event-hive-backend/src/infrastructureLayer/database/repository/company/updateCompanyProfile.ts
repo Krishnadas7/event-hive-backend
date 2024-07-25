@@ -17,9 +17,7 @@ export const updateCompanyProfile = async (
     companyModels:typeof CompanyModel
 ) =>{
     try {
-        console.log('=====',company_email)
         const company:any = await companyModels.findOne({company_email:company_email})
-        console.log('from repooooooo=',company)
     if(company){
         company.company_name=company_name
         company.company_email=company_email

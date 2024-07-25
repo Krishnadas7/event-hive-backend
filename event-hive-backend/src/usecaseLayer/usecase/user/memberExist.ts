@@ -3,9 +3,9 @@ import { IResponse } from '../../interface/services/Iresponse';
 import { IUserRepository } from './../../interface/repository/IuserRepository';
 
 export const memberExist = async (
-    userRepository:IUserRepository,
-    userId:string,
-    email:string,
+        userRepository:IUserRepository,
+        userId:string,
+        email:string,
 ):Promise<IResponse> =>{
     try {
         const member = await userRepository.memberExist(userId,email)

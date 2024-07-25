@@ -20,9 +20,17 @@ import { userData } from './user/userData';
 import { getRandomUser } from './user/getRandomUser';
 import { getImage } from './user/getImage';
 import { memberExist } from './user/memberExist';
+import { getNotification } from './user/getNotification';
+import { IUnreadRepository } from '../interface/repository/IunreadRepository';
+import { userRefreshToken } from './user/userRefreshToken';
+import { IReportRepository } from '../interface/repository/IReportRepository';
+import { createReport } from './user/createReport';
+import { allUsers } from './user/allUser';
 
 export class UserUseCase{
+  private readonly reportRepository : IReportRepository
     private readonly userRepository : IUserRepository;
+    private readonly unreadRepository: IUnreadRepository;
     private readonly bcrypt : IHashPassword;
     private readonly nodemailer: INodemailer;
     private readonly jwt : Ijwt;
@@ -31,7 +39,9 @@ export class UserUseCase{
     private readonly s3:S3Client;
 
     constructor(
+        reportRepository : IReportRepository,
         userRepository : IUserRepository,
+        unreadRepository:IUnreadRepository,
         bcrypt : IHashPassword,
         nodemailer: INodemailer,
         jwt : Ijwt,
@@ -39,7 +49,9 @@ export class UserUseCase{
         s3service:Is3bucket,
         s3:S3Client
     ){ 
+        this.reportRepository = reportRepository
         this.userRepository = userRepository;
+        this.unreadRepository = unreadRepository,
         this.bcrypt = bcrypt;
         this.nodemailer = nodemailer;
         this.jwt = jwt;
@@ -64,12 +76,8 @@ export class UserUseCase{
         confirm_password:string,
         mobile:string
     }){
-        console.log('infrastructu===userusecasee====1');
-        console.log(first_name,last_name,email,mobile,password);
-        
         return createUser(
             this.userRepository,
-            // this.jwt,
             this.bcrypt,
             first_name,
             last_name,
@@ -77,7 +85,6 @@ export class UserUseCase{
             password,
             confirm_password,
             mobile
-
         )
     }
     async loginUser({
@@ -105,6 +112,8 @@ export class UserUseCase{
           this.userRepository,
           this.bcrypt,
           this.jwt,
+          this.s3Service,
+          this.s3,
           first_name,
           email,
           password
@@ -120,7 +129,6 @@ export class UserUseCase{
     }
    
     async tokenValidation({forgotToken}:{forgotToken:string}){
-      console.log('====',forgotToken)
       return tokenValidation(forgotToken)
     }
     async sendEmailFogotPassword({
@@ -220,7 +228,6 @@ export class UserUseCase{
          )
       }
       async getRandomUser(userId:string){
-        console.log('uerfrom usecased ,',userId)
         return getRandomUser(
          this.userRepository,
          userId
@@ -239,6 +246,31 @@ export class UserUseCase{
         this.userRepository,
         userId,
         email
+      )
+     }
+     async createReport({userEmail,report}:{userEmail:string,report:string}){
+       return createReport(
+        userEmail,
+        report,
+        this.reportRepository
+       )
+     }
+     async getNotification(token:any){
+      return getNotification(
+        this.unreadRepository,
+        token
+      )
+     }
+     async userRefreshToken(incomingRefreshToken:string){
+      return userRefreshToken(
+        this.userRepository,
+        this.jwt,
+        incomingRefreshToken
+      )
+     }
+     async allUsers(){
+      return allUsers(
+        this.userRepository
       )
      }
      

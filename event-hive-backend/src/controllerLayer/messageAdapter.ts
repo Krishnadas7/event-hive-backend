@@ -25,9 +25,8 @@ export class MessageAdapter{
  async getMessage (req: Req,res: Res,next: Next){
     try{
         const conversationId = req.query.conversationId
-        console.log('conversidddd',conversationId);
-        
-      const  message= await this.messageusecase.getMessage(conversationId as string)
+        console.log('===================================',req.cookies.userRefreshToken)
+      const  message= await this.messageusecase.getMessage(conversationId as string,req.cookies.userRefreshToken)
       if(message){
         res.status(message.status).json({
             success:message.success,

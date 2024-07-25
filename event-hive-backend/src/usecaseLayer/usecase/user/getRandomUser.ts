@@ -12,6 +12,7 @@ export const getRandomUser = async (
     if(user){
 
         const responsedata : StoreData={
+            _id:user._id,
             first_name:user.first_name,
             last_name:user.last_name,
             qualification:user.qualification,

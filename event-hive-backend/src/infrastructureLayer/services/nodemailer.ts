@@ -15,6 +15,39 @@ class Nodemailer implements INodemailer {
       }
       return otp;
     }
+    async sendBulkEmail(event: string[], subject: string, message: string,url:string): Promise<string> {
+      console.log('sending bulk=========================================',event,subject,message,url)
+      const transporter =await nodemailer.createTransport({
+        host:"smtp.gmail.com",
+        port:587,
+        secure:false,
+        requireTLS:false,
+        auth:{
+          user:'skrishnadas38@gmail.com',
+          pass:  'jfne dimd aggq uwix',
+        }
+      })
+      const emailOptions = {
+        from: 'skrishnadas38@gmail.com', // sender address
+        subject: subject,
+        text: message,
+        html: `<strong>${message} ${url}</strong>`,
+      };
+      const sendPromises = event.map(async(recipient) => {
+        const mailOptions = {
+          ...emailOptions,
+          to: recipient,
+        };
+    
+       await transporter.sendMail(mailOptions);
+      });
+      try {
+        await Promise.all(sendPromises);
+         return 'Email successfully send'
+      } catch (error) {
+        return 'error'
+      }
+    }
     async sendEmailforForgotPassword(email:string,first_name:string):Promise<string|undefined>{
       try {
 
@@ -26,7 +59,6 @@ class Nodemailer implements INodemailer {
         console.log('ddd tol',forgotToken);
         let ffff=jwt.verify(forgotToken,'forgotToken123')
           
-        // console.log(email,first_name)
         const transporter =await nodemailer.createTransport({
           host:"smtp.gmail.com",
           port:587,

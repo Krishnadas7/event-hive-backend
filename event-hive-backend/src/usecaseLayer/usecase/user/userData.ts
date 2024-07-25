@@ -7,7 +7,6 @@ export const userData = async (
  email:string
 ):Promise<IResponse> =>{
     try {
-        console.log('user data................',email)
         const user = await userRepository.findUser(email)
     if(user){
 
@@ -20,7 +19,6 @@ export const userData = async (
             bio:user.bio,
             socialmedialink1:user.socialmedialink1,
             socialmedialink2:user.socialmedialink2
-
         }
         return {
             status:200,

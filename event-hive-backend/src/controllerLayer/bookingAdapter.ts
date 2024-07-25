@@ -8,8 +8,9 @@ export class BookingAdapter{
     }
     async ticketBooking(req:Req,res:Res,next:Next){
         try {
+          console.log('body from booking',req.body)
             const booking = await this.bookingusecase.ticketBooking(req.body)
-            console.log('booking',booking)
+            console.log('bookin resu',booking)
              if(booking){
                 res.status(booking.status).json({
                     success:booking.success,
@@ -61,6 +62,46 @@ export class BookingAdapter{
        } catch (error) {
         next(error)
        }
+    }
+    async todaySales(req:Req,res:Res,next:Next){
+      try {
+        const todayS = await this.bookingusecase.todaySales()
+        todayS &&
+        res.status(todayS.status).json({
+          data:todayS.data,
+          message:todayS.message,
+          success:todayS.success
+        })
+      } catch (error) {
+        next(error)
+      }
+    }
+    async totalSales(req:Req,res:Res,next:Next){
+      try {
+        const totalS = await this.bookingusecase.totalSales()
+        totalS && 
+        res.status(totalS.status).json({
+          data:totalS.data,
+          message:totalS.message,
+          success:totalS.success
+        })
+      } catch (error) {
+        next(error)
+      }
+    }
+    async filterSalesReport(req:Req,res:Res,next:Next){
+      try{
+        const pagination = req.query.pagination
+        const fData = await this.bookingusecase.filterSalesReport(pagination as string)
+        fData && 
+        res.status(fData.status).json({
+          data:fData.data,
+          message:fData.message,
+          success:fData.success
+        })
+      }catch(error){
+        next(error)
+      }
     }
  
     async webhook(req: Req, res: Res, next: Next) {

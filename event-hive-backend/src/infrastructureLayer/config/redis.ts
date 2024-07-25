@@ -1,34 +1,20 @@
-import { createClient } from 'redis';
+import Redis from 'ioredis';
 
-let redisClient:any;
+const REDIS_URL = 'redis://localhost:6379'; // Use 'localhost' or the service name if in Docker
 
-export const connectToRedis = async () => {
-    if (!redisClient) {
-        redisClient = createClient();
-        redisClient.on('error', (err:any) => console.error('Redis Client Error', err));
+function connectToRedis() {
+    const redis = new Redis(REDIS_URL);
 
-        try {
-            await redisClient.connect();
-            console.log('Connected to Redis');
-        } catch (error) {
-            console.error('Error connecting to Redis:', error);
-            throw error;
-        }
-    }
-};
+    redis.on('connect', () => {
+        console.log('Connected to Redis');
+    });
 
-export const disconnectFromRedis = async () => {
-    if (redisClient) {
-        try {
-            await redisClient.quit();
-            console.log('Disconnected from Redis');
-        } catch (error) {
-            console.error('Error disconnecting from Redis:', error);
-            throw error;
-        }
-    } else {
-        console.warn('Redis client is not initialized');
-    }
-};
+    redis.on('error', (error) => {
+        console.error('Redis connection error:', error);
+    });
 
-export { redisClient };
+    return redis;
+}
+
+const redisClient = connectToRedis();
+export {redisClient}

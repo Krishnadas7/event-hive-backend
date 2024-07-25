@@ -12,21 +12,18 @@ export const forgotPassword = async (
     password: string
   ): Promise<IResponse> => {
     try {
-     
-      
         const hashedPassword = await bcrypt.createHash(password);
         const newPassword = {
           email,
           password: hashedPassword,
         };
         const forgotUser = await userRepository.forgotPassword(newPassword);
-  
+
           const token = jwt.createJWT(forgotUser._id as string, forgotUser.email as string, "user", forgotUser.name as string);
           return {
             status: 200,
             success: true,
             message: `Successfully Forgot Password Welcome ${forgotUser.name}`,
-            // token : token,
             data : forgotUser
           };
        

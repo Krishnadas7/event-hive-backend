@@ -7,27 +7,27 @@ import { IEventRepository } from "../../interface/repository/IeventRepository";
 import mongoose,{Types} from "mongoose";
 import { ObjectId } from 'mongodb';
 export const createEvent = async (
-    eventRepository:IEventRepository,
-    s3service:Is3bucket,
-    s3:S3Client,
-    participants:string,
-    event_name:string,
-    event_type:string,
-    start_date:string,
-    starting_time:string,
-    end_date:string,
-    ending_time:string,
-    users_limit:string,
-    event_description:string,
-    company_id:Types.ObjectId,
-    event_poster:Express.Multer.File,
-    ticket:string,
-    amount:string
+        eventRepository:IEventRepository,
+        s3service:Is3bucket,
+        s3:S3Client,
+        participants:string,
+        event_name:string,
+        event_type:string,
+        start_date:string,
+        starting_time:string,
+        end_date:string,
+        ending_time:string,
+        users_limit:string,
+        event_description:string,
+        company_id:Types.ObjectId,
+        event_poster:Express.Multer.File,
+        ticket:string,
+        amount:string
 ):Promise<IEResponse> =>{
 
   try {
-    const event:IEvent = {
-      participants,
+       const event:IEvent = {
+        participants,
         event_name,
         event_type,
         start_date,

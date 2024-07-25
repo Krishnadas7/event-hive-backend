@@ -4,7 +4,7 @@ import { Is3bucket } from '../interface/services/Is3Services';
 import { IRedis } from "../interface/services/Iredis";
 import { createEvent } from "./event/createEven";
 import { getEventWithCompany } from "./event/getEventWithCompany";
-import mongoose,{Types} from "mongoose";
+import {Types} from "mongoose";
 import { blockEvent } from "./event/blockEvent";
 import { getEvent } from "./event/getEvent";
 import { userEventList } from "./event/userEventList";
@@ -14,21 +14,27 @@ import { filterEvents } from "./event/filterEvents";
 import { liveEvents } from "./event/liveEvents";
 import { allMembers } from "./event/allMembers";
 import { closeEvent } from "./event/closeEvent";
+import { sendBulkEmail } from "./event/sendBulkEmail";
+import INodemailer from "../interface/services/Inodemailer";
+
 export class EventUseCaase {
   private readonly eventRepository :IEventRepository;
   private readonly redis: IRedis
   private readonly s3Service:Is3bucket;
   private readonly s3:S3Client;
+  private readonly nodemailer:INodemailer;
   constructor(
     eventRepsitory:IEventRepository,
     redis:IRedis,
     s3service:Is3bucket,
-    s3:S3Client
+    s3:S3Client,
+    nodemailer:INodemailer
   ){
     this.eventRepository=eventRepsitory,
     this.redis = redis,
     this.s3Service=s3service,
-    this.s3 = s3
+    this.s3 = s3,
+    this.nodemailer=nodemailer
   }
   async createEvent({
     participants,
@@ -155,6 +161,14 @@ export class EventUseCaase {
       return closeEvent(
         this.eventRepository,
         eventId
+      )
+    }
+    async sendBulkEmail(eventId:string,url:string){
+      return sendBulkEmail(
+        this.eventRepository,
+        this.nodemailer,
+        eventId,
+        url
       )
     }
 }

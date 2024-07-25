@@ -12,6 +12,7 @@ import { companyProfileUpdate } from "./company/companyProfileUpdate";
 import { Is3bucket } from '../interface/services/Is3Services';
 import { S3Client } from '@aws-sdk/client-s3';
 import { blockCompany } from "./company/blockCompany";
+import { companyRefreshToken } from "./company/companyRefreshToken";
 
 export class CompanyUseCase{
  private readonly  companyRepository : ICompanyRepository;
@@ -171,6 +172,13 @@ export class CompanyUseCase{
     companyId,
    
   )
+ }
+ async companyRefreshToken(incomingRefreshToken:string){
+    return companyRefreshToken(
+      this.companyRepository,
+      this.jwt,
+      incomingRefreshToken
+    )
  }
   
 }

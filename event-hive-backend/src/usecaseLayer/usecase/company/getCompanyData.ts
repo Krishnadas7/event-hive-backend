@@ -8,10 +8,8 @@ export const getcompanyData = async (
     token:string
 ) =>{
     try {
-                const decoded:any = await jwt.verify(token,process.env.ACCESS_TOKEN_KEY as string)
-               console.log(decoded,'lsdkldskl')
-                const companyData = await companyRepository.findCompanyWithId(decoded.id as string)
-              
+        const decoded:any = await jwt.verify(token,process.env.ACCESS_TOKEN_KEY as string)
+        const companyData = await companyRepository.findCompanyWithId(decoded.id as string)
               return {
                 status:200,
                 success:true,

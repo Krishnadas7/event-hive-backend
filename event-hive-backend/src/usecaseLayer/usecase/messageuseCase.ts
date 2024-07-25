@@ -1,12 +1,17 @@
 import { IMessageRepository } from "../interface/repository/ImessageRepository";
+import { IUnreadRepository } from "../interface/repository/IunreadRepository";
 import { createMessage } from "./message/createMessage";
 import { getMessage } from "./message/getMessage";
+
 export class MessageUseCase{
 private readonly messageRepository:IMessageRepository
+private readonly unreadRepository:IUnreadRepository
 constructor(
-    messageRepository:IMessageRepository
+    messageRepository:IMessageRepository,
+    unreadRepository:IUnreadRepository
 ){
     this.messageRepository=messageRepository
+    this.unreadRepository=unreadRepository
 }
    async createMessage({
     conversationId,
@@ -19,15 +24,18 @@ constructor(
    }) {
     return createMessage(
      this.messageRepository,
+     this.unreadRepository,
      conversationId,
      sender,
      text
     )
    }
-   async getMessage(conversationId:string){
+   async getMessage(conversationId:string,userToken:string){
     return getMessage(
         this.messageRepository,
-        conversationId
+        this.unreadRepository,
+        conversationId,
+        userToken
     )
    }
 }

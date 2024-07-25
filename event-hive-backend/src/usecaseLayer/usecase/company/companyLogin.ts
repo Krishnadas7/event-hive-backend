@@ -12,12 +12,9 @@ export const companyLogin = async (
     password:string
 ) =>{
     try {
-        console.log('from company login',company_email,password)
         const company = await companyRepository.findCompany(company_email)
-        console.log('from company co',company)
         if(company){
             const match:boolean = await bcrypt.compare(password,company.password as string)
-            console.log('from match',match)
             if(match){
                 const {accessToken,refreshToken} = await jwt.createJWT(company._id as string,company.company_email as string,"company",company.company_name as string)
                 const responseData : CompanyData={

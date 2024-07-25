@@ -8,11 +8,12 @@ export const createCompany = async (
 ) : Promise<CompanyData> =>{
     try {
         const companyD = await companyModel.create(company)
+        console.log('created companyyyy',companyD,companyD._id)
         await companyD.save()
         const responseData : CompanyData = {
-             _id:company._id,
-             company_email:company.company_email,
-             company_name:company.company_name
+             _id:companyD._id,
+             company_email:companyD.company_email,
+             company_name:companyD.company_name
         }
         return responseData 
     } catch (error) { 

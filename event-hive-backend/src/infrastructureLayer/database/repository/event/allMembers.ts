@@ -29,7 +29,6 @@ export const allMembers = async (
       },
       {$project:{userDetails:1,_id:0}}
     ]);
-    console.log('===members', members[0].userDetails);
     return members
   } catch (error) {
     throw error;

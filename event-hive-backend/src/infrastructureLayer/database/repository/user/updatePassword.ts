@@ -1,4 +1,3 @@
-import { IUser } from "../../../../domainLayer/user";
 import UserModel from "../../model/userModel";
 
 export const updatePassword = async (
@@ -14,9 +13,6 @@ export const updatePassword = async (
        }else{
         return false
        }
-       
-      
-
         return true
     } catch (error) {
         throw error

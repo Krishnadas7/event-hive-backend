@@ -5,7 +5,6 @@ export const closeEvent = async (
     eventModel:typeof EventModel
 ):Promise<boolean> =>{
     try {
-        console.log(eventId)
         const close = await eventModel.findOneAndUpdate({_id:eventId},{$set:{live:'closed'}})
         console.log(close)
         if(close){

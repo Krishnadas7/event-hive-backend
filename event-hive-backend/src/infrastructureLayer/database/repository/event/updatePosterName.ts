@@ -1,5 +1,4 @@
 import EventModel from "../../model/eventModel";
-import { StoreData } from "../../../../usecaseLayer/interface/services/Iresponse";
 
 export const updatePosterName = async (
     imageName:string,

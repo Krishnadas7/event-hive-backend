@@ -1,5 +1,4 @@
 import { IEvent } from "../../../domainLayer/event";
-import { EventStoreData } from "../services/Iresponse";
 
 
 export interface IEventRepository{
@@ -15,4 +14,9 @@ export interface IEventRepository{
     liveEvents(companyId:string):Promise<IEvent[]>;
     allMembers(eventId:string):Promise<any>;
     closeEvent(eventId:string):Promise<boolean>;
+    findParticipants(eventId:string):Promise<any>;
+    eventCount():Promise<number>;
+    liveEventCount():Promise<number>;
+    piechartData():Promise<string[]>
+    checkingUserExist(userId:string,eventId:string):Promise<boolean>
 }

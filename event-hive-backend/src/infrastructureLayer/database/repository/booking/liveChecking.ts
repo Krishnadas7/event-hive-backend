@@ -35,7 +35,6 @@ export const liveChecking = async (
          },
         
       ])
-      console.log('asssslookup=======',live.length,userId)
       return live.length
    } catch (error) {
     throw error

@@ -11,20 +11,9 @@ export class UserAdapter {
     async createUser(req: Req, res: Res, next: Next) {
       
      try {
-         console.log('usercontroller == useradapter == 1');
          const newUser = await this.userusecase.createUser(req.body);
  
          if (newUser ) {
-             console.log('New user token:', newUser);
- 
-            //  res.cookie("userjwt", newUser.token, {
-            //      httpOnly: true,
-            //      sameSite: "strict", // Prevent CSRF attacks
-            //      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days,
-            //  });
- 
-            //  console.log('Cookie set successfully:', res.cookie);
- 
              res.status(newUser.status).json({
                  success: newUser.success,
                  message: newUser.message,
@@ -46,19 +35,18 @@ export class UserAdapter {
  async loginUser(req: Req, res: Res, next: Next) {
   try {
       const user = await this.userusecase.loginUser(req.body);
-      console.log('login user error showing ====',user);
       
       if (user) {
         res.cookie("userAccessToken", user.userAccessToken, {
           httpOnly:true,
           secure:true,
-          sameSite: "strict",
+          sameSite: "none",
           maxAge:  900000
       });
           res.cookie("userRefreshToken", user.userRefreshToken, {
               httpOnly: true,
               secure:true,
-              sameSite: "strict",
+              sameSite: "none",
               maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days for refreshToken
           });
       }
@@ -80,18 +68,17 @@ async googleAuth (req:Req,res:Res,next:Next){
   try {
     
     const user = await this.userusecase.googleAuth(req.body)
-    console.log('userr adapter',user)
     if (user) {
       res.cookie("userAccessToken", user.userAccessToken, {
         httpOnly:true,
         secure:true,
-        sameSite: "strict",
+        sameSite: "none",
         maxAge:  900000
     });
         res.cookie("userRefreshToken", user.userRefreshToken, {
             httpOnly: true,
             secure:true,
-            sameSite: "strict",
+            sameSite: "none",
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days for refreshToken
         });
     }
@@ -121,7 +108,6 @@ async googleAuth (req:Req,res:Res,next:Next){
  }
  async tokenValidation(req:Req, res:Res ,next: Next){
     try {
-      console.log('useradapter===',req.body)
       const token = await this.userusecase.tokenValidation(req.body)
       res.status(token.status).json({
         success:token.success,
@@ -135,26 +121,23 @@ async googleAuth (req:Req,res:Res,next:Next){
  async sendEmail(req: Req, res: Res, next: Next) {
     try {
       const user = await this.userusecase.verifyEmail(req.body);
-      console.log('seremail',user);
       
       res.status(user.status).json({
         success: user.success,
         message: user.message,
       });
     } catch (err) {
+      console.log(err)
       next(err);
     }
   }
-  // async tokenValidation(req: Req,res: Res, next: Next) {
-  //   const token = await this.userusecase.tokenValidation(req.body)
-  // }
+ 
 
   async emailVerification(req: Req, res: Res, next: Next) {
     try {
       console.log(req.body);
       
       const user = await this.userusecase.emailVeification(req.body);
-      console.log('userrrr',user);
       
       user &&
         res.status(user.status).json({
@@ -182,12 +165,11 @@ async googleAuth (req:Req,res:Res,next:Next){
 }
     async fogotPassword(req: Req, res: Res, next: Next) {
         try {
-          console.log('from forgot password adapter  ',req.body)
           const newUser = await this.userusecase.forgotPassword(req.body);
           newUser &&
             res.cookie("userjwt", newUser, {
               httpOnly: true,
-              sameSite: "strict", // Prevent CSRF attacks
+              sameSite: "none", // Prevent CSRF attacks
               maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
             });
     
@@ -208,7 +190,6 @@ async googleAuth (req:Req,res:Res,next:Next){
             id:req.body.id,
             email:req.body.email
           }
-          console.log('==============',req.body)
           const imageUpdate = await this.userusecase.uploadProfileImage(obj)
 
           res.status(imageUpdate.status).json({
@@ -291,7 +272,6 @@ async googleAuth (req:Req,res:Res,next:Next){
       try {
         const email = req.query.email;
         const getUserImage = await this.userusecase.getImage(email as string);
-        console.log('res from adapter', getUserImage);
         return res.status(getUserImage.status).json({
           success: getUserImage.success,
           message: getUserImage.message,
@@ -315,12 +295,62 @@ async googleAuth (req:Req,res:Res,next:Next){
         next(error)
       }
     }
+    async getNotification(req:Req, res:Res, next:Next){
+      try {
+        const getN = await this.userusecase.getNotification(req.cookies.userRefreshToken)
+        return res.status(getN.status).json({
+          success: getN.success,
+          message: getN.message,
+          data: getN.data
+        });
+      } catch (error) {
+        next(error) 
+      }
+    }
+    async allUser(req:Req, res:Res, next:Next){
+      const users = await this.userusecase.allUsers()
+      return res.status(users.status).json({
+        success: users.success,
+        message: users.message,
+        data: users.data
+      });
+    }
+    async createReport(req:Req, res:Res, next:Next){
+      try {
+        const report = await this.userusecase.createReport(req.body)
+        return res.status(report.status).json({
+          success: report.success,
+          message: report.message,
+          data: report.data
+        });
+      } catch (error) {
+        next(error)
+      }
+    }
+    async userRefreshToken(req:Req, res:Res, next:Next){
+      try {
+        const incomingRefreshToken = req.body.refreshToken
+        const tokens = await this.userusecase.userRefreshToken(incomingRefreshToken)
+        const accessToken=tokens.data?.accessToken
+        const refreshToken=tokens.data?.refreshToken
+        res.status(tokens.status)
+       .cookie("userAccessToken",accessToken,{
+        httpOnly:true,
+        secure:true,
+        sameSite:'none',
+        maxAge: 900000
+       })
+       .cookie("userRefreshToken",refreshToken,{
+        httpOnly:true,
+        secure:true,
+        sameSite:'none',
+        maxAge: 30 * 24 * 60 * 60 * 1000
+       })
+       .json({accessToken,refreshToken });
+      } catch (error) {
+        next(error)
+      }
+    }
     
-    // async tokenValidation (req: Req,res: Res, next: Next){
-    //   try { 
-    //     const validation = await this.userusecase.tokenValidation(req.body)
-    //   } catch (error) {
-    //     next(error)
-    //   }
-    // }
+   
 }

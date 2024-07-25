@@ -3,8 +3,6 @@ import { IEventRepository } from "../../interface/repository/IeventRepository";
 import { IResponse } from "../../interface/services/Iresponse";
 import { Is3bucket } from "../../interface/services/Is3Services";
 import { S3Client } from "@aws-sdk/client-s3";
-import { IEvent } from "../../../domainLayer/event";
-import { Document, Model } from "mongoose";
 
 export const userEventList = async (
     eventRepository:IEventRepository,
@@ -24,9 +22,7 @@ export const userEventList = async (
             
         })
         await Promise.all(urlPromises);
-        if(events){
-            console.log('===============',events);
-            
+        if(events){            
             return {
                 status:200,
                 success:true,

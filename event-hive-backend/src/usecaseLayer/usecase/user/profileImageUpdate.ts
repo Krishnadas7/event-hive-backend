@@ -7,20 +7,17 @@ import ErrorResponse from "../../handler/errorResponse";
 import { StoreData } from "../../interface/services/Iresponse";
 
 export const profileImageUpdate = async (
-  userRepository:IUserRepository,
-  s3service:Is3bucket,
-  s3:S3Client,
-  image:Express.Multer.File|undefined,
-  id:string,
-  email:string
+      userRepository:IUserRepository,
+      s3service:Is3bucket,
+      s3:S3Client,
+      image:Express.Multer.File|undefined,
+      id:string,
+      email:string
 ):Promise<IResponse> =>{
     try {
       
-      console.log('datas from profileimage upalodad  ',image,id)
         if(image){
-          console.log('imageee',image)
         const nameReturn =await s3service.profileImageUpdate(s3,image,id)
-         
          if(nameReturn){
            const user:any = await userRepository.findUser(email)
            console.log('userProfile imageee',user)

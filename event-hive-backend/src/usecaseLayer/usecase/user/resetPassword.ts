@@ -1,8 +1,6 @@
-import {IUser} from '../../../domainLayer/user'
 import { IUserRepository } from '../../interface/repository/IuserRepository'
 import IHashPassword from '../../interface/services/IhashPassword'
-import { IResponse,StoreData } from '../../interface/services/Iresponse'
-import ErrorResponse from '../../handler/errorResponse'
+import { IResponse } from '../../interface/services/Iresponse'
 import jwt from 'jsonwebtoken'
 
 export const resetPassword = async (

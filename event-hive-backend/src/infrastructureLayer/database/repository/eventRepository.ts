@@ -13,6 +13,11 @@ import { filterEvents } from "./event/filterEvents";
 import { liveEvents } from "./event/liveEvents";
 import { allMembers } from "./event/allMembers";
 import { closeEvent } from "./event/closeEvent";
+import { findParticipants } from "./event/findParticipants";
+import { eventCount } from "./event/eventCounts";
+import { liveEventCount } from "./event/liveEventCount";
+import { piechartData } from "./event/piechartData";
+import { checkingUserExist } from "./event/chekingUserExist";
 
 export class EventRepository implements IEventRepository{
     constructor(private readonly eventModels:typeof EventModel){}
@@ -51,5 +56,20 @@ export class EventRepository implements IEventRepository{
     }
     async closeEvent(eventId: string): Promise<boolean> {
         return closeEvent(eventId,this.eventModels)
+    }
+     async findParticipants(eventId: string): Promise<any> {
+        return findParticipants(eventId,this.eventModels)
+    }
+    async eventCount(): Promise<number> {
+        return eventCount(this.eventModels)
+    }
+    async liveEventCount(): Promise<number> {
+        return liveEventCount(this.eventModels)
+    }
+    async piechartData(): Promise<any> {
+        return piechartData(this.eventModels)
+    }
+    async checkingUserExist(userId: string,eventId:string): Promise<boolean> {
+        return checkingUserExist(userId,eventId,this.eventModels)
     }
 }

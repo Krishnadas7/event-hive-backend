@@ -1,5 +1,4 @@
 import CompanyModel from '../../model/companyModel'
-import { StoreData } from "../../../../usecaseLayer/interface/services/Iresponse";
 
 export const updateCompanyImageName = async (
     imageName:string,

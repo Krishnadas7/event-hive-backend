@@ -4,18 +4,14 @@ import IHashPassword from "../../interface/services/IhashPassword";
 import { IRedis } from '../../interface/services/Iredis';
 import INodemailer from '../../interface/services/Inodemailer';
 import { ICResponse } from '../../interface/services/Iresponse';
-// import { createClient } from 'redis';
-// export const redisClient = createClient();
-// redisClient.on('error', (err) => console.error('Redis Client Error', err));
-// redisClient.connect().catch(console.error);
-import { connectToRedis } from "../../../infrastructureLayer/config/redis";
+import {redisClient}  from "../../../infrastructureLayer/config/redis";
 
 
 export const sendEmailforCompany = async (
-   CompanyRepository:ICompanyRepository,
-   bcrypt:IHashPassword,
-   nodemailer:INodemailer,
-   redis:IRedis,
+    CompanyRepository:ICompanyRepository,
+    bcrypt:IHashPassword,
+    nodemailer:INodemailer,
+    redis:IRedis,
     company_name:string,
     company_email:string,
     password:string,
@@ -25,13 +21,18 @@ export const sendEmailforCompany = async (
     company_description:string,
 ):Promise<ICResponse> =>{
     try {
-        await connectToRedis()
+        // await connectToRedis()
         const companyData = await CompanyRepository.findCompany(company_email)
-        console.log('companyData',companyData)
+        console.log(companyData)
+        if(companyData){
+           return {
+            status:200,
+            success:false,
+            message:'email already exists'
+           }
+        }
         if(!companyData){
-          console.log('name and email',company_email,company_name)
         const sendEmailOtp = await nodemailer.sendEmailForCompanyRegistration(company_email,company_name)
-        console.log('otp from sendemailfor compay',sendEmailOtp)
         const hashedPassword = await bcrypt.createHash(password)
         let obj={
             company_name,
@@ -43,14 +44,20 @@ export const sendEmailforCompany = async (
             password:hashedPassword,
             otp:sendEmailOtp
         }
-        const dataStoring = await redis.dataStoringRedis(obj)
+        const dataStoring = await redisClient.set('companyData', JSON.stringify({...obj}), 'EX', 300);
+
+        console.log(dataStoring,'data storing')
+        const dataFromRedis = await redisClient.get('companyData')
+     let datas:any = JSON.parse(dataFromRedis as any)
+     console.log('redis data',datas)
         return {
             status:200,
             success:true
         }
     }
-    throw ErrorResponse.badRequest('user already exists')
+    throw ErrorResponse.badRequest('something went wrong')
     } catch (error) {
+        console.log('error from company sendemail usecase',error)
         throw error
     }
    

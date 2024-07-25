@@ -13,6 +13,9 @@ import {updateProfile} from './user/updateProfile'
 import { getRandomUser } from "./user/getRandomUser";
 import { memberExist } from "./user/memberExist";
 import { addTeam } from "./user/addTeam";
+import { usersCount } from "./user/usersCount";
+import { filterUser } from "./user/filterUsers";
+import { allUsers } from "./user/allUsers";
 
 export class UserRepository implements IUserRepository{
     constructor(private readonly usersModel:typeof UserModel){}
@@ -35,8 +38,24 @@ export class UserRepository implements IUserRepository{
      async updatePassword(newPassword: string,email:string): Promise<Boolean> {
         return updatePassword(newPassword,email,this.usersModel)
     }
-    async updateProfile(first_name: string, last_name: string, qualification: string, bio: string, socialmedialink1: string, socialmedialink2: string, id: string): Promise<IUser | null> {
-        return updateProfile(first_name,last_name,qualification,bio,socialmedialink1,socialmedialink2,id,this.usersModel)
+    async updateProfile(
+        first_name: string, 
+        last_name: string,
+        qualification: string,
+        bio: string, 
+        socialmedialink1: string,
+        socialmedialink2: string, 
+        id: string
+        ): Promise<IUser | null> {
+        return updateProfile(
+            first_name,
+            last_name,
+            qualification,
+            bio,
+            socialmedialink1,
+            socialmedialink2,
+            id,
+            this.usersModel)
     }
     async getRandomUser(userId: string): Promise<IUser | null> {
          return getRandomUser(userId,this.usersModel)
@@ -46,5 +65,14 @@ export class UserRepository implements IUserRepository{
     }
     async addTeam(team: string[],user_id:string):Promise<boolean> {
         return addTeam(team,user_id,this.usersModel)
+    }
+    async usersCount(): Promise<number> {
+        return usersCount(this.usersModel)
+    }
+    async filterUsers(): Promise<any> {
+        return filterUser(this.usersModel)
+    }
+    async allUsers(): Promise<any> {
+        return allUsers(this.usersModel)
     }
 }

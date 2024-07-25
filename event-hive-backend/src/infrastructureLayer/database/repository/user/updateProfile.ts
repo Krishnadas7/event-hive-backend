@@ -1,5 +1,4 @@
 import UserModel from "../../model/userModel";
-import {IUser} from '../../../../domainLayer/user'
 
 export const updateProfile = async (
     first_name:string,

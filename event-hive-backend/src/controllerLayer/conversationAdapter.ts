@@ -8,9 +8,7 @@ constructor(conversationusecase:ConversationUseCase){
 }
  async addConversation(req:Req,res:Res,next:Next){
       try {
-        console.log('body from add conversation',req.body)
         const newConversation = await this.conversationusecase.addConversation(req.body)
-        console.log(' res from adapterrr',newConversation)
         res.status(newConversation.status).json({
           success:newConversation.success,
           message:newConversation.message,

@@ -52,7 +52,7 @@ const eventSchema: Schema = new Schema<IEvent & Document>(
         },
         live:{
             type:String,
-            default:'pending'
+            default:'open'
         }
     },{
         timestamps:true

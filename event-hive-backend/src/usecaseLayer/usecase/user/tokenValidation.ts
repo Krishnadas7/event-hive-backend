@@ -17,16 +17,11 @@ forgotToken:string
                     message:'token is expired'
                 }
             }
-          
-           
-        
         return {
             status:200,
             success:true,
             message:'token is there'
         }
-           
-         
     } catch (error) {
         throw error
     }

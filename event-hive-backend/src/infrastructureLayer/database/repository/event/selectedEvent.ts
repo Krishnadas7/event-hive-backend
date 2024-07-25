@@ -1,5 +1,4 @@
 import { IEvent } from "../../../../domainLayer/event"
-import { EventStoreData } from "../../../../usecaseLayer/interface/services/Iresponse"
 import EventModel from "../../model/eventModel"
 import {Types} from 'mongoose'
 
@@ -8,7 +7,6 @@ export const selectedEvent = async (
     eventModels:typeof EventModel
 ):Promise<IEvent> =>{
  try {
-    // const event = await eventModels.findOne({_id:eventId})
     const event : any= await eventModels.aggregate([
         {
             $match: {

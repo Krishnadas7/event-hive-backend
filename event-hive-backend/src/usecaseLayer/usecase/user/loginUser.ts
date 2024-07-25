@@ -4,7 +4,6 @@ import Ijwt from "../../interface/services/Ijwt";
 import IHashPassword from "../../interface/services/IhashPassword";
 import { IResponse, StoreData } from "../../interface/services/Iresponse";
 import ErrorResponse from "../../handler/errorResponse";
-// import  IRequestValidatior  from "../../interface/repository/IvalidareRepository";
 import { IRequestValidator } from "../../interface/repository/IvalidareRepository";
 import { Is3bucket } from "../../interface/services/Is3Services";
 import { S3Client } from "@aws-sdk/client-s3";
@@ -28,16 +27,12 @@ export const loginUser = async (
        }
         
         const user: IUser | null = await userRepository.findUser(email)
-        console.log('basheer undoooo',user)
         if (user && user._id) {
             if (user.is_block) {
                 throw ErrorResponse.badRequest('your account is blocked')
             }
             const match:boolean = await bcrypt.compare(password,user.password)
             if(match){
-
-            
-            
             const { accessToken, refreshToken }:any =await jwt.createJWT(user._id, user.email as string, "user", user.first_name as string);
             const userId = user._id.toString()
             let url:string=''

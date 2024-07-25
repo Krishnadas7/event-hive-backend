@@ -35,7 +35,6 @@ export const liveListing = async(
              },
             
           ])
-          console.log('===llive====',live)
           return live
        } catch (error) {
         throw error

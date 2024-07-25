@@ -8,21 +8,28 @@ import { allBookings } from "./booking/allBooings";
 import { IUserRepository } from "../interface/repository/IuserRepository";
 import { liveChecking } from "./booking/liveChecking";
 import { liveListing } from "./booking/liveListing";
+import { todaySales } from "./booking/todaySales";
+import { totalSales } from "./booking/totalSales";
+import { filterSalesReport } from "./booking/filterSalesReport";
+import { IEventRepository } from "../interface/repository/IeventRepository";
 
 export class BookingUseCase{
+    private readonly eventRepository: IEventRepository
     private readonly bookingRepository: IBookingRepository
     private readonly userRepository:IUserRepository
     private readonly stripe:IStripe
     private readonly s3Service:Is3bucket;
     private readonly s3:S3Client;
     constructor(
+        eventRepository: IEventRepository,
         bookingRepository:IBookingRepository,
         userRepository:IUserRepository,
         stripe:IStripe,
         s3service:Is3bucket,
         s3:S3Client
     ){
-        this.bookingRepository=bookingRepository,
+        this.eventRepository=eventRepository
+        this.bookingRepository=bookingRepository
         this.userRepository = userRepository
         this.stripe=stripe
         this.s3Service=s3service
@@ -46,6 +53,7 @@ export class BookingUseCase{
         team:string[],
     }){
       return ticketBooking(
+        this.eventRepository,
         this.bookingRepository,
         this.userRepository,
         this.stripe,
@@ -86,6 +94,22 @@ export class BookingUseCase{
         this.s3Service,
         this.s3,
         userId
+      )
+    }
+    async todaySales(){
+      return todaySales(
+        this.bookingRepository
+      )
+    }
+    async totalSales(){
+      return totalSales(
+        this.bookingRepository
+      )
+    }
+    async filterSalesReport(pagination:string){
+      return filterSalesReport(
+        this.bookingRepository,
+        pagination
       )
     }
 }

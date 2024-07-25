@@ -8,7 +8,6 @@ export class EventAdapter{
  }
   async createEvent(req: Req,res: Res,next: Next){
     try {
-      console.log('event======',req.body)
       const event_poster = req.file
       let amount
       if(req.body.ticket_type==='paid'){
@@ -44,7 +43,6 @@ export class EventAdapter{
   async eventWithCompany (req: Req,res: Res,next: Next){
     try {
        const eventWithCompany = await this.eventusecase.getEventWithCompany()
-       console.log('eventwithCompany====',eventWithCompany)
        res.status(eventWithCompany.status).json({
         success:eventWithCompany.success,
         message:eventWithCompany.message,
@@ -70,7 +68,6 @@ export class EventAdapter{
     try{
       const companyId = req.query.companyId
       const details = await this.eventusecase.getEvent(companyId as string)
-      console.log('geteventsss====',details)
       res.status(details.status).json({
         success:details.success,
         message:details.message,
@@ -121,7 +118,6 @@ export class EventAdapter{
       const eventId = req.query.eventId
 
       const event = await this.eventusecase.selectedEvent(eventId as string)
-      console.log('=====',event)
       res.status(event.status).json({
         success:event.success,
         message:event.message,
@@ -165,7 +161,6 @@ export class EventAdapter{
    try {
     const eventId = req.query.eventId
      const members = await this.eventusecase.allMembers(eventId as string)
-     console.log('dslkdsljkjdsljkjsdlkjdsflkj',members.data[0].userDetails)
      res.status(members.status).json({
       success:members.success,
       message:members.message,
@@ -183,6 +178,20 @@ export class EventAdapter{
         success:close.success,
         message:close.message,
         data:close.data
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+  async sendBulkEmail(req:Req,res:Res,next:Next){
+    try {
+      const eventId=req.body.eventId
+      const url = req.body.url
+      console.log('====',eventId,url)
+      const sendEmail = await this.eventusecase.sendBulkEmail(eventId,url)
+      res.status(sendEmail.status).json({
+        success:sendEmail.success,
+        message:sendEmail.message,
       })
     } catch (error) {
       next(error)

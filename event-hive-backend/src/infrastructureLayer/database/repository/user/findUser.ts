@@ -5,9 +5,7 @@ export const findUser = async(
     userModels: typeof UserModel
 )=>{
     try {
-        // console.log('in user repository',email);
         const userExist = await userModels.findOne({email:email});
-        // console.log(userExist);
         return userExist
         
     } catch (error) {

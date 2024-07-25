@@ -7,9 +7,7 @@ export const getRandomUser = async(
     try {
         console.log('in user repository',typeof userId);
         const userExist = await userModels.findOne({_id:userId});
-        // console.log(userExist);
         return userExist
-        
     } catch (error) {
         throw error
     }

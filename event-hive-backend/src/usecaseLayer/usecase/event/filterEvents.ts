@@ -6,12 +6,12 @@ import { S3Client } from "@aws-sdk/client-s3"
 import {IEvent} from '../../../domainLayer/event'
 
 export const filterEvents = async(
-    eventRepository:IEventRepository,
-    s3service:Is3bucket,
-    s3:S3Client,
-    type:string,
-    ticket:string,
-    date:string
+        eventRepository:IEventRepository,
+        s3service:Is3bucket,
+        s3:S3Client,
+        type:string,
+        ticket:string,
+        date:string
 ):Promise<IResponse>=>{
     try {
         console.log(type,ticket,date)

@@ -11,8 +11,6 @@ export const verifyEmail = async (
     email: string
   ): Promise<IResponse> => {
     try {
-
-  
       const user = await userRepository.findUser(email);
       if(user){
         throw ErrorResponse.badRequest("User already exist");

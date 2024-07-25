@@ -1,5 +1,4 @@
 import UserModel from "../../model/userModel";
-import { StoreData } from "../../../../usecaseLayer/interface/services/Iresponse";
 
 export const uploadUserImage = async (
     imageName:string,

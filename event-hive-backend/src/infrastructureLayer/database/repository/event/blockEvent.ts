@@ -1,5 +1,6 @@
 import EventModel from "../../model/eventModel";
-import {IEvent} from '../../../../domainLayer/event'
+
+
 export const blockEvent = async (
     eventId:string,
     eventModels:typeof EventModel

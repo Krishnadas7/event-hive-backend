@@ -9,7 +9,6 @@ export class CompanyAdapter{
 
     async createCompany(req: Req,res: Res,next : Next){
         try {
-            console.log(req.body,'from create company')
             const newCompany = await this.companyusecase.createCompany(req.body)
            
             if(newCompany){
@@ -31,19 +30,18 @@ export class CompanyAdapter{
     }
     async companyLogin(req: Req,res: Res,next: Next){
         try {
-            console.log('body from company login',req.body)
             const company = await this.companyusecase.companyLogin(req.body)
             if(company){
                 res.cookie("companyAccessToken", company.companyAccessToken, {
                     httpOnly:true,
                     secure:true,
-                    sameSite: "strict",
+                    sameSite: "none",
                     maxAge:  900000
                 });
                     res.cookie("companyRefreshToken", company.companyRefreshToken, {
                         httpOnly: true,
                         secure:true,
-                        sameSite: "strict",
+                        sameSite: "none",
                         maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days for refreshToken
                     });
             }
@@ -61,13 +59,16 @@ export class CompanyAdapter{
     async sendEmailforCompany(req: Req,res: Res,next: Next){
         try {
             const sendEmail = await this.companyusecase.sendEmailforCompany(req.body)
+            console.log('send email',sendEmail)
             if(sendEmail){
                 res.status(sendEmail.status).json({
                     success:sendEmail.success,
                     message:sendEmail.message,
                 })
             }
+
         } catch (error) {
+            console.log('error from company sendemail',error)
             next(error)
         }
     }
@@ -141,5 +142,29 @@ export class CompanyAdapter{
         }catch(error){
             next(error)
         }
+    }
+    async companyRefreshToken(req: Req,res : Res, next: Next){
+       try {
+        const incomingRefreshToken =  req.body.refreshToken
+        const tokens = await this.companyusecase.companyRefreshToken(incomingRefreshToken as string)
+        const accessToken = tokens.data?.accessToken
+        const refreshToken = tokens.data?.refreshToken
+        res.status(tokens.status)
+       .cookie("companyAccessToken",accessToken,{
+        httpOnly:true,
+        secure:true,
+        sameSite:'none',
+        maxAge: 900000 
+       })
+       .cookie("companyRefreshToken",refreshToken,{
+        httpOnly:true,
+        secure:true,
+        sameSite:'none',
+        maxAge: 30 * 24 * 60 * 60 * 1000
+       })
+       .json({accessToken,refreshToken });
+       } catch (error) {
+        next(error)
+       }
     }
 }

@@ -14,8 +14,8 @@ export const liveListing = async(
  try {
         const live:IBooking[] = await bookingRepository.liveListing(userId)
         const urlPromise = live.map(async(details)=>{
-            const url = await s3service.getImages(s3,details.eventDetails.event_poster as string)
-            details.eventDetails.event_poster = url
+        const url = await s3service.getImages(s3,details.eventDetails.event_poster as string)
+                    details.eventDetails.event_poster = url
         })
         await Promise.all(urlPromise)
         if(live){

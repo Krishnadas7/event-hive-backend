@@ -3,11 +3,50 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Is3bucket } from "../../usecaseLayer/interface/services/Is3Services";
 import path from 'path'
 import dotenv from 'dotenv'
-// import '../../../../.env'
+import AWS from 'aws-sdk';
+
 const envFilePath = path.resolve(__dirname, '../../../../.env');
 dotenv.config({ path: envFilePath })
-
+AWS.config.update({
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    region: process.env.BUCKET_REGION
+  });
+  
+  const ses = new AWS.SES();
 export class S3services implements Is3bucket{
+    async sendGroupEmail(event:string[]) {
+        const emails = event
+    
+        const params = {
+          Source: 'skrishnadas61@gmail.com', // The email address you verified with SES
+          Destination: {
+            ToAddresses: emails
+          },
+          Message: {
+            Subject: {
+              Data: 'Event Starting Soon'
+            },
+            Body: {
+              Text: {
+                Data: 'Your event is starting soon. Please join us!'
+              },
+              Html: {
+                Data: '<strong>Your event is starting soon. Please join us!</strong>'
+              }
+            }
+          }
+        };
+    
+        try {
+          const data = await ses.sendEmail(params).promise();
+          return 'Emails sent successfully'
+        } catch (err) {
+          console.error('Error sending emails:', err);
+          throw err;
+        }
+      }
+
    async profileImageUpdate(s3Obj: S3Client, file: Express.Multer.File,name:string){
     const bucketName = process.env.BUCKET_NAME;
     
@@ -35,9 +74,6 @@ export class S3services implements Is3bucket{
 
     } catch (error) {
         throw error
-        console.error("Error uploading file to S3:", error);
-        // throw new Error("Failed to upload file to S3");
-
     }    
    }
    async getImages(s3Obj: S3Client, key: string): Promise<string> {
@@ -49,18 +85,14 @@ export class S3services implements Is3bucket{
     };
     
     const command = new GetObjectCommand(params);
-   console.log('dsfdssdfdsds',bucketName)
     try {
 
         const url = await getSignedUrl(s3Obj as any, command as any, { expiresIn: 3600 });
-        console.log('url from getimages=========',url);
-        
         return url;
 
     } catch (error) {
         console.error("Error getting pre-signed URL:", error);
         throw error
-        // throw new Error("Failed to get pre-signed URL for image");
     }
 }
    

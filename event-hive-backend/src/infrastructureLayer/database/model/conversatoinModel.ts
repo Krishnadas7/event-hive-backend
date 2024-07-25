@@ -6,11 +6,7 @@ const ConversationSchema :Schema = new Schema<IConversation & Document>(
     members: {
       type: [String],
     },
-    unreadCount: {
-      type: Map,
-      of: Number,
-      default: new Map(),
-    },
+    
   },
   { timestamps: true }
 );

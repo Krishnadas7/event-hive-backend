@@ -6,13 +6,13 @@ export const addConversation = async (
     conversationRepository:IConversationRepostitory,
 ):Promise<ICONdata >=>{
    try {
-     const newConversation = await conversationRepository.addConversation(senderId,receiverId)
-      return {
-        status:200,
-        success:true,
-        message:'conversation added',
-        data:newConversation
-      }
+        const newConversation = await conversationRepository.addConversation(senderId,receiverId)
+          return {
+            status:200,
+            success:true,
+            message:'conversation added',
+            data:newConversation
+          }
    } catch (error) {
     throw error
    }

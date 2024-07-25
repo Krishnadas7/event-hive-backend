@@ -2,9 +2,9 @@ import { IEventRepository } from "../../interface/repository/IeventRepository";
 import { Is3bucket } from '../../interface/services/Is3Services';
 import { S3Client } from "@aws-sdk/client-s3";
 export const getEventWithCompany = async (
-    eventRepository:IEventRepository,
-    s3service:Is3bucket,
-    s3:S3Client
+      eventRepository:IEventRepository,
+      s3service:Is3bucket,
+      s3:S3Client
 ) =>{
     try {
         const events = await eventRepository.getEventWithCompany()

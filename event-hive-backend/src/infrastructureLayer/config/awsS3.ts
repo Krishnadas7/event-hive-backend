@@ -1,9 +1,8 @@
-import { S3Client ,S3ClientConfig,PutObjectCommand} from '@aws-sdk/client-s3';
-// import '../../../../.env'
+import { S3Client ,S3ClientConfig} from '@aws-sdk/client-s3';
 import path from 'path'
 import dotenv from 'dotenv'
-// import '../../../../.env'
-const envFilePath = path.resolve(__dirname, '../../../../.env');
+// import ff from '../../../.env'
+const envFilePath = path.resolve(__dirname, '../../../.env');
 dotenv.config({ path: envFilePath })
 
 const bucketName = process.env.BUCKET_NAME

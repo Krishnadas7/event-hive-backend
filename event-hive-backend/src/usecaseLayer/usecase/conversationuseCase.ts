@@ -1,6 +1,8 @@
 import { IConversationRepostitory } from "../interface/repository/IconversationRepository";
 import { addConversation } from "./conversation/addConversation";
 import { getConversation } from "./conversation/getConversation";
+
+
 export class ConversationUseCase{
   private readonly conversationRepository:IConversationRepostitory
   constructor(

@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import IHashPassword from '../../usecaseLayer/interface/services/IhashPassword';
 
 class Encrypt implements IHashPassword{
@@ -10,7 +10,6 @@ async createHash(password: string): Promise<string> {
     
     return hashedPassword;
 }
-
 async compare(password: string, hashpassword: string): Promise<boolean> {
     const match = await bcrypt.compare(password, hashpassword);
     return match;
