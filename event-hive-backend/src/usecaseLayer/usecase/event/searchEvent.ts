@@ -4,6 +4,7 @@ import { IEventRepository } from "../../interface/repository/IeventRepository"
 import { IEvent } from "../../../domainLayer/event"
 import ErrorResponse from "../../handler/errorResponse"
 import { IResponse } from "../../interface/services/Iresponse"
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const searchEvent = async (
     eventRepository:IEventRepository,
@@ -21,7 +22,7 @@ export const searchEvent = async (
             await Promise.all(urlPromise)
         
             return {
-                status:200,
+                status:StatusCodes.OK,
                 success:true,
                 message:'search events',
                 data:event

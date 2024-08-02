@@ -1,6 +1,9 @@
+import { IEvent } from "../../../domainLayer/event";
 import { IEventRepository } from "../../interface/repository/IeventRepository";
 import { Is3bucket } from '../../interface/services/Is3Services';
 import { S3Client } from "@aws-sdk/client-s3";
+import { StatusCodes } from "../../../utils/statusCodes"
+
 export const getEventWithCompany = async (
       eventRepository:IEventRepository,
       s3service:Is3bucket,
@@ -8,18 +11,21 @@ export const getEventWithCompany = async (
 ) =>{
     try {
         const events = await eventRepository.getEventWithCompany()
-        const urlPromises = events.map(async(event:any)=>{
+        const urlPromises = events?.map(async(event:IEvent)=>{
           try {
-            const eventId=event._id.toString()
+            if(event && event._id){
+              const eventId=event._id.toString()
             const url = await s3service.getImages(s3,eventId as string)
             event.event_poster=url
+            }
+            
           } catch (error) {
-            event.event_poster=null
+            event.event_poster=''
           }
         })
         await Promise.all(urlPromises)
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:'all events',
             data:events

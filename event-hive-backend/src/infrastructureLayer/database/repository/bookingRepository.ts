@@ -10,6 +10,7 @@ import { todaySales } from "./booking/todaySales";
 import { totalSales } from "./booking/totalSales";
 import { ISalesReport } from "../../types/salesReport";
 import { filterSalesReport } from "./booking/filterSalesReport";
+import { IEvent } from "../../../domainLayer/event";
 
 export class BookingRepository implements IBookingRepository{
    
@@ -24,10 +25,10 @@ export class BookingRepository implements IBookingRepository{
     async allBookings(userId: string): Promise<IBooking[]> {
         return allBookings(userId,this.bookingModel)
     }
-    async liveChecking(userId: string): Promise<any> {
+    async liveChecking(userId: string): Promise<number> {
         return liveChecking(userId,this.bookingModel)
     }
-    async liveListing(userId: string): Promise<any> {
+    async liveListing(userId: string): Promise<IBooking[]> {
         return liveListing(userId,this.bookingModel)
     }
     async todaySales(): Promise<number> {

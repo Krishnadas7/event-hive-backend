@@ -8,9 +8,7 @@ export class BookingAdapter{
     }
     async ticketBooking(req:Req,res:Res,next:Next){
         try {
-          console.log('body from booking',req.body)
             const booking = await this.bookingusecase.ticketBooking(req.body)
-            console.log('bookin resu',booking)
              if(booking){
                 res.status(booking.status).json({
                     success:booking.success,
@@ -41,12 +39,14 @@ export class BookingAdapter{
          try {
           const userId = req.query.userId
           const live = await this.bookingusecase.liveChecking(userId as string)
+          console.log(live,'livee')
           res.status(live.status).json({
             data:live.data,
             message:live.message,
             success:live.success
           })
          } catch (error) {
+          console.log(error,'dd')
           next(error)
          }
     }

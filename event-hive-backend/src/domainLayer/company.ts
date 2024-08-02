@@ -18,5 +18,5 @@ export interface ICompany{
     country?:string;
     industry_type?:string;
     company_description?:string;
-    
+    profileImage?:string;
 }

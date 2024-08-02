@@ -1,4 +1,6 @@
 import UserModel from "../../model/userModel";
+import { FilterUserResult } from "../../../../utils/typeDatas";
+import { IUser } from "../../../../domainLayer/user";
 
 
 export const filterUser = async (
@@ -40,10 +42,8 @@ export const filterUser = async (
         }
       ]);
       
-      console.log('yearly data',yearlyData);
-      console.log('monthly data',monthlyData);
-      console.log('weekly data',weeklyData);
-      return {yearlyData,monthlyData,weeklyData}
+ 
+      return {yearlyData,monthlyData,weeklyData} 
   } catch (error) {
     console.log(error);
     

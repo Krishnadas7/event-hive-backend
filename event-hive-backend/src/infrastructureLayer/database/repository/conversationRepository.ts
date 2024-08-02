@@ -10,7 +10,7 @@ export class ConversationRepository implements IConversationRepostitory{
  async addConversation(senderId: string, receiverId: string): Promise<IConversation> {
     return addConversation(senderId,receiverId,this.conversationModels)
 }
-async getConversation(userId: string): Promise<any > {
+async getConversation(userId: string): Promise<IConversation[] > {
     return getConversation(userId,this.conversationModels)
 }
 }

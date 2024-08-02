@@ -1,3 +1,4 @@
+import { PData } from "../../../../utils/typeDatas";
 import EventModel from "../../model/eventModel";
 
 export const piechartData = async (

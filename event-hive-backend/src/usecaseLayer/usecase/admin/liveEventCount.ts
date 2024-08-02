@@ -7,14 +7,15 @@ export const liveEventCount = async (
 ) =>{
   try {
     const liveC = await eventRepository.liveEventCount()
-    console.log('liv cccc',liveC)
-        return {
-            status: 200,
-            success: true,
-            data: liveC,
-            message: 'Users Count'
-        };
-    
+    if(liveC){
+      return {
+        status: 200,
+        success: true,
+        data: liveC,
+        message: 'Users Count'
+    };
+    } 
+    throw ErrorResponse.badRequest('error in liveEventCoutn')
   } catch (error) {
     throw error
   }

@@ -1,6 +1,7 @@
 import ErrorResponse from '../../handler/errorResponse';
 import { IResponse } from '../../interface/services/Iresponse';
 import { IUserRepository } from './../../interface/repository/IuserRepository';
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const memberExist = async (
         userRepository:IUserRepository,
@@ -12,7 +13,7 @@ export const memberExist = async (
         if(member || !member){
             return{
                 success:true,
-                status:200,
+                status:StatusCodes.OK,
                 message:'already inserted',
                 data:member
             }

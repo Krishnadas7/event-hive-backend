@@ -4,6 +4,9 @@ import { ICResponse } from "../../interface/services/Iresponse";
 import ErrorResponse from "../../handler/errorResponse";
 import { IRedis } from "../../interface/services/Iredis";
 import { redisClient } from "../../../infrastructureLayer/config/redis";
+import { ICompany } from "../../../domainLayer/company";
+import { StatusCodes } from "../../../utils/statusCodes"
+
 export const createCompany = async (
     companyRepository:ICompanyRepository,
     bcrypt:IHashPassword,
@@ -11,19 +14,10 @@ export const createCompany = async (
     otp:string
 ):Promise<ICResponse> =>{
    try {
-     const dataFromRedis = await redisClient.get('companyData')
-     let datas:any = JSON.parse(dataFromRedis as any)
+     const dataFromRedis: string | null = await redisClient.get('companyData')
+     const datas: ICompany = dataFromRedis ? JSON.parse(dataFromRedis) : {};
      if(otp !=datas.otp){
-          return {
-      status: 200,
-      success: false,
-      message: 'Invalid otp'
-     };
-     }
-     const companyDetails = await companyRepository.findCompany(datas.company_email as string)
-     console.log('checking company',companyDetails)
-     if(companyDetails){
-      throw ErrorResponse.badRequest('company already registerd')
+          throw ErrorResponse.badRequest('invalid otp')
      }
      
        const company={
@@ -35,20 +29,14 @@ export const createCompany = async (
         company_description:datas.company_description,
         password:datas.password
        }
-       
        const newCompany = await companyRepository.createCompany(company)
-       if(newCompany){
-        // await disconnectFromRedis()
-       }
-      
        return {
-        status:200,
+        status:StatusCodes.OK,
         success:true,
         message:`company created successfully ${datas.company_name}`,
         data:newCompany
        }
    } catch (error) {
-    console.log('error from create company')
      throw error
    }
 }

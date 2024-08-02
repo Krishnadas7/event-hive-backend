@@ -12,7 +12,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import compression from 'compression';
-// import df from '../../../.env'
+// import {sample} from './croneJob'
+// sample()
+import { sendingEmail } from '../../usecaseLayer/usecase/croneJob/croneJob';
+sendingEmail()
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 export const app = express();

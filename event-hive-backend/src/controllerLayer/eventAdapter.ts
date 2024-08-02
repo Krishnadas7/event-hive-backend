@@ -1,6 +1,8 @@
 import { EventUseCaase } from "../usecaseLayer/usecase/eventuseCase";
 import { Next,Res,Req } from "../infrastructureLayer/types/expressTypes";
 
+
+
 export class EventAdapter{
  private readonly eventusecase : EventUseCaase;
  constructor(eventusecase:EventUseCaase){
@@ -8,6 +10,7 @@ export class EventAdapter{
  }
   async createEvent(req: Req,res: Res,next: Next){
     try {
+      
       const event_poster = req.file
       let amount
       if(req.body.ticket_type==='paid'){
@@ -15,29 +18,32 @@ export class EventAdapter{
       }else{
         amount='0'
       }
-      let obj:any  ={
-        participants:req.body.participants,
-         event_name:req.body.event_name,
-         event_type:req.body.event_type,
-         start_date:req.body.start_date,
-         starting_time:req.body.starting_time,
-         end_date:req.body.end_date,
-         ending_time:req.body.ending_time,
-         users_limit:req.body.users_limit,
-         event_description:req.body.event_description,
-         company_id:req.body.company_id,
-         event_poster:event_poster,
-         ticket:req.body.ticket_type,
-         amount:amount
+      if(event_poster){
+        let obj  ={
+          participants:req.body.participants,
+           event_name:req.body.event_name,
+           event_type:req.body.event_type,
+           start_date:req.body.start_date,
+           starting_time:req.body.starting_time,
+           end_date:req.body.end_date,
+           ending_time:req.body.ending_time,
+           users_limit:req.body.users_limit,
+           event_description:req.body.event_description,
+           company_id:req.body.company_id,
+           event_poster:event_poster,
+           ticket:req.body.ticket_type,
+           amount:amount
+        }
+         const newEvent = await this.eventusecase.createEvent(obj)
+          res.status(newEvent.status).json({
+           success:newEvent.success,
+           message:newEvent.message,
+           data:newEvent.data
+          })
       }
-       const newEvent = await this.eventusecase.createEvent(obj)
-        res.status(newEvent.status).json({
-         success:newEvent.success,
-         message:newEvent.message,
-         data:newEvent.data
-        })
+      
     } catch (error) {
-      console.log(error)
+      next(error)
     }
   }
   async eventWithCompany (req: Req,res: Res,next: Next){
@@ -49,7 +55,7 @@ export class EventAdapter{
         data:eventWithCompany.data
        })
     } catch (error) {
-       console.log(error)
+       next(error)
     }
   }
   async blockEvent( req: Req,res: Res, next: Next){
@@ -61,7 +67,7 @@ export class EventAdapter{
         message:blocked.message
       })
     } catch (error) {
-      console.log(error)
+      next(error)
     }
   }
   async getCompany (req: Req,res: Res,next: Next) {
@@ -87,36 +93,33 @@ export class EventAdapter{
         data:events.data
       })
     }catch(error){
-      console.log(error)
+      next(error)
     }
   }
   async userEventList (req: Req,res: Res,next: Next){
      try { 
-      const pagination : any= req.query.pagination 
-       const events = await this.eventusecase.userEventList(pagination)
+      let pagination = req.query.pagination as unknown
+      
+      if(pagination){
+        
+        const events = await this.eventusecase.userEventList(pagination as number)
        
-       if(events){
-        res.status(events.status).json({
-          success:events.success,
-          message:events.message,
-          data:events.data
-        })
-       }else{
-        res.status(500).json({
-          success: false,
-          message: 'Failed to create user or user data is missing.',
-          data: null,
-      });
-       }
+        if(events){
+         res.status(events.status).json({
+           success:events.success,
+           message:events.message,
+           data:events.data
+         })
+        }
+      }
       
      } catch (error) {
-      console.log(error)
+       next(error)
      }
   }
   async selectedEvent (req: Req,res: Res,next: Next){
     try {
       const eventId = req.query.eventId
-
       const event = await this.eventusecase.selectedEvent(eventId as string)
       res.status(event.status).json({
         success:event.success,
@@ -142,19 +145,20 @@ export class EventAdapter{
   }
   async filterEvents(req: Req,res: Res,next: Next){
     try {
-      let obj={
-        type:req.query.type,
-        ticket:req.query.ticket,
-        date:req.query.date
-      }
-      const event = await this.eventusecase.filterEvents(obj as any)
+
+      let obj = {
+        type: req.query.type as string || '',
+        ticket: req.query.ticket as string || '',
+        date: req.query.date as string || ''
+      };
+      const event = await this.eventusecase.filterEvents(obj)
       res.status(event.status).json({
         success:event.success,
         message:event.message,
         data:event.data
       })
     } catch (error) {
-      console.log(error)
+      next(error)
     }
   }
   async allMembers(req: Req,res: Res,next: Next){
@@ -187,7 +191,6 @@ export class EventAdapter{
     try {
       const eventId=req.body.eventId
       const url = req.body.url
-      console.log('====',eventId,url)
       const sendEmail = await this.eventusecase.sendBulkEmail(eventId,url)
       res.status(sendEmail.status).json({
         success:sendEmail.success,

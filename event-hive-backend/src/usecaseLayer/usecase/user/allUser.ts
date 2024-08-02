@@ -1,5 +1,6 @@
 import ErrorResponse from "../../handler/errorResponse"
 import { IUserRepository } from "../../interface/repository/IuserRepository"
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const allUsers = async (
     userRepository:IUserRepository
@@ -8,7 +9,7 @@ export const allUsers = async (
         const users = await userRepository.allUsers()
         if(users){
             return {
-               status:200,
+               status:StatusCodes.OK,
                success:true,
                message:'all users',
                data:users

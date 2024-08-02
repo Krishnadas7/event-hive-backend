@@ -1,4 +1,6 @@
+import ErrorResponse from "../../handler/errorResponse";
 import { IBookingRepository } from "../../interface/repository/IbookingRepository";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const  liveChecking =async (
     bookingRepository:IBookingRepository,
@@ -6,13 +8,16 @@ export const  liveChecking =async (
 ) =>{
     try {
         const live = await bookingRepository.liveChecking(userId)
-        
-        return {
-            status:200,
-            success:true,
-            message:'datas',
-            data:live
+        console.log('live in boo')
+        if(!isNaN(live)){
+            return {
+                status:StatusCodes.OK,
+                success:true,
+                message:'datas',
+                data:live
+            }
         }
+       throw ErrorResponse.badRequest('error in checking')
     } catch (error) {
         throw error
     }

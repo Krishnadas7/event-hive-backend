@@ -1,4 +1,6 @@
+import ErrorResponse from "../../handler/errorResponse"
 import { IEventRepository } from "../../interface/repository/IeventRepository"
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const blockEvent = async (
     eventRespository:IEventRepository,
@@ -6,11 +8,14 @@ export const blockEvent = async (
 )=>{
  try {
     const blocked = await eventRespository.blockEvent(eventId)
-    return{
-        status:200,
-        success:true,
-        message:'blocked successfully',
+    if(blocked){
+        return{
+            status:StatusCodes.OK,
+            success:true,
+            message:'updated successfully',
+        }
     }
+    throw ErrorResponse.badRequest('blocking error')
  } catch (error) {
     throw error
  }

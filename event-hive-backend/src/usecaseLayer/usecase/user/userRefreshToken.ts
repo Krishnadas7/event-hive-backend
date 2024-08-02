@@ -1,7 +1,7 @@
 import UserModel from "../../../infrastructureLayer/database/model/userModel";
 import { IUserRepository } from "../../interface/repository/IuserRepository";
 import Ijwt from "../../interface/services/Ijwt";
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 export const userRefreshToken = async (
     userRepository:IUserRepository,
@@ -9,8 +9,8 @@ export const userRefreshToken = async (
     incomingRefreshToken:string
 )=>{
 try {
-    const accessTokenKey : any = process.env.ACCESS_TOKEN_KEY
-    const refreshTokenKey : any = process.env.REFRESH_TOKEN_KEY
+    const accessTokenKey  = process.env.ACCESS_TOKEN_KEY
+    const refreshTokenKey  = process.env.REFRESH_TOKEN_KEY
     if (!incomingRefreshToken) {
         return {
             status:401,
@@ -18,7 +18,7 @@ try {
             message:'access token is not available'
         }
     }
-    const decoded:any = jwt.verify(incomingRefreshToken, refreshTokenKey)
+    const decoded = jwt.verify(incomingRefreshToken, refreshTokenKey as string) as JwtPayload
     const user = await UserModel.findOne({_id:decoded.id})
     if(!user){
         return {
@@ -27,7 +27,7 @@ try {
             message:'user is not defined'
         }
       }
-      const { accessToken, refreshToken }:any =await Jwt.createJWT(user._id, user.email as string, "user", user.first_name as string);
+      const { accessToken, refreshToken } =await Jwt.createJWT(user._id, user.email as string, "user", user.first_name as string);
       let obj={
         accessToken:accessToken,
         refreshToken:refreshToken

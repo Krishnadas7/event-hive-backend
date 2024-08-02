@@ -3,7 +3,13 @@ import { ICompanyRepository } from "../../interface/repository/IcompanyRepositor
 import { ICResponse } from "../../interface/services/Iresponse";
 import { Is3bucket } from "../../interface/services/Is3Services";
 import { S3Client } from "@aws-sdk/client-s3";
+import ErrorResponse from '../../handler/errorResponse';
+import { StatusCodes } from "../../../utils/statusCodes"
 
+interface DecodedToken {
+    id: string;
+    // other properties if needed
+  }
 export const companyProfileUpdate = async (
         companyRepository:ICompanyRepository,
         s3service:Is3bucket,
@@ -24,11 +30,10 @@ export const companyProfileUpdate = async (
         token:string,
 ):Promise<ICResponse>=>{
     try {
-    const decoded:any = await jwt.verify(token,process.env.ACCESS_TOKEN_KEY as string)
+    const decoded = await jwt.verify(token,process.env.ACCESS_TOKEN_KEY as string) as DecodedToken;
     const imageUpload = await s3service.profileImageUpdate(s3,companyLogo,decoded.id)
     if(imageUpload){
         const response = await companyRepository.updateCompanyImageName(imageUpload,decoded.id)
-        console.log(response)
         const updateProfile = await companyRepository.updateProfile(
             company_name,
             company_email,
@@ -44,17 +49,13 @@ export const companyProfileUpdate = async (
             industry_type
         )
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:'your profile was updated',
             data:updateProfile
         }
     }
-    return {
-        status: 400,
-        success: false,
-        message: 'Enter proper otp'
-       };
+    throw ErrorResponse.badRequest('wrong in edit profile')
     } catch (error) {
         throw error
     }    

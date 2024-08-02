@@ -1,6 +1,7 @@
 import ErrorResponse from "../../handler/errorResponse";
 import { IUserRepository } from "../../interface/repository/IuserRepository";
 import { IResponse, StoreData } from "../../interface/services/Iresponse";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const userData = async (
  userRepository :IUserRepository,
@@ -21,7 +22,7 @@ export const userData = async (
             socialmedialink2:user.socialmedialink2
         }
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:'this is userdata',
             data:responsedata

@@ -38,7 +38,7 @@ export class CompanyRepository implements ICompanyRepository{
      company_contactperson: string, 
      company_contactphone: string, 
      industry_type: string
-      ): Promise<ICompany> {
+      ) {
       return updateCompanyProfile(
         company_name,
         company_email,
@@ -55,7 +55,7 @@ export class CompanyRepository implements ICompanyRepository{
         this.companysModel
       )
   }
-  getAllCompany(): Promise<any> {
+  getAllCompany(): Promise<ICompany[]> {
       return getAllCompany(this.companysModel)
   }
   async blockCompany(companyId: string): Promise<boolean> {

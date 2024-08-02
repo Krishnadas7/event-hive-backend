@@ -1,5 +1,7 @@
+import ErrorResponse from "../../handler/errorResponse";
 import { ICompanyRepository } from "../../interface/repository/IcompanyRepository";
 import { IResponse } from "../../interface/services/Iresponse";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const blockCompany = async (
     companyRepository:ICompanyRepository,
@@ -10,17 +12,12 @@ export const blockCompany = async (
         const blocked = await companyRepository.blockCompany(companyId)
         if(blocked){
             return {
-                status:200,
+                status:StatusCodes.OK,
                 success:true,
                 message:'company blocked successfully'
             }
         }
-        return {
-            status:400,
-            success:false,
-            message:'company blocked failed'
-        }
-       
+        throw ErrorResponse.badRequest('blocking error')
     } catch (error) {
         throw error
     }

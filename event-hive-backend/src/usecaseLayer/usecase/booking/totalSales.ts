@@ -1,6 +1,6 @@
 import ErrorResponse from '../../handler/errorResponse';
 import { IBookingRepository } from './../../interface/repository/IbookingRepository';
-
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const totalSales = async (
     bookingRepository:IBookingRepository
@@ -9,7 +9,7 @@ export const totalSales = async (
       const totalS = await bookingRepository.totalSales()
       if(totalS){
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             data:totalS,
             message:'Today Sales'

@@ -5,6 +5,8 @@ import { IEventRepository } from "../../interface/repository/IeventRepository"
 import { IUserRepository } from "../../interface/repository/IuserRepository"
 import { IResponse } from "../../interface/services/Iresponse"
 import IStripe from "../../interface/services/Istripe"
+import { StatusCodes } from "../../../utils/statusCodes"
+
 export const ticketBooking = async (
         eventRepository:IEventRepository,
         bookingRepository:IBookingRepository,
@@ -22,7 +24,7 @@ export const ticketBooking = async (
       const userExist = await eventRepository.checkingUserExist(user_id,event_id)
       if(!userExist){
         return{
-          status:200,
+          status:StatusCodes.OK,
           success:true,
           message:'already registerd this event'
         }

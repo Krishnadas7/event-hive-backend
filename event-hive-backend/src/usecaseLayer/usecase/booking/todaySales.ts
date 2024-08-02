@@ -1,6 +1,7 @@
 import ErrorResponse from '../../handler/errorResponse';
 import { IResponse } from '../../interface/services/Iresponse';
 import { IBookingRepository } from './../../interface/repository/IbookingRepository';
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const todaySales = async (
     bookingRepository:IBookingRepository
@@ -9,7 +10,7 @@ export const todaySales = async (
      const todayS = await bookingRepository.todaySales()
      if(todayS){
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             data:todayS,
             message:'Today Sales'

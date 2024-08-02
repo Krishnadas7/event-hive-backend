@@ -44,7 +44,6 @@ export class CompanyUseCase{
  }:{
    otp:string
  }) {
-   console.log(otp,'from company usecase')
     return createCompany(
         this.companyRepository,
         this.bcrypt,

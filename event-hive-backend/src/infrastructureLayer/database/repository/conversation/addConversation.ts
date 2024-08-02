@@ -21,6 +21,7 @@ export const addConversation = async (
       members: [senderId, receiverId]
     });
     await newConversation.save();
+    console.log(newConversation,'new coversation')
     return newConversation;
   } catch (error) {
     throw error;

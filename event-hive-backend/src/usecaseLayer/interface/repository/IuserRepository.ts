@@ -14,6 +14,6 @@ export interface IUserRepository{
     memberExist(userId:string,email:string):Promise<boolean>;
     addTeam(team:string[],user_id:string):Promise<boolean>;
     usersCount():Promise<number>;
-    filterUsers():Promise<IUser[]>;
+    filterUsers():Promise<unknown>;
     allUsers():Promise<IUser[]>
 }

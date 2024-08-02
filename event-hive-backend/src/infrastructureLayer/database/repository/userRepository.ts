@@ -16,6 +16,7 @@ import { addTeam } from "./user/addTeam";
 import { usersCount } from "./user/usersCount";
 import { filterUser } from "./user/filterUsers";
 import { allUsers } from "./user/allUsers";
+import { FilterUserResult } from "../../../utils/typeDatas";
 
 export class UserRepository implements IUserRepository{
     constructor(private readonly usersModel:typeof UserModel){}
@@ -69,10 +70,10 @@ export class UserRepository implements IUserRepository{
     async usersCount(): Promise<number> {
         return usersCount(this.usersModel)
     }
-    async filterUsers(): Promise<any> {
+    async filterUsers() {
         return filterUser(this.usersModel)
     }
-    async allUsers(): Promise<any> {
+    async allUsers(): Promise<IUser[]> {
         return allUsers(this.usersModel)
     }
 }

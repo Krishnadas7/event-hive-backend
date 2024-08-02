@@ -1,5 +1,6 @@
 import ErrorResponse from "../../handler/errorResponse";
 import { IEventRepository } from "../../interface/repository/IeventRepository";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const closeEvent = async (
     eventRepository:IEventRepository,
@@ -9,7 +10,7 @@ export const closeEvent = async (
         const close = await eventRepository.closeEvent(eventId)
         if(close){
             return{
-                status:200,
+                status:StatusCodes.OK,
                 success:true,
                 message:'closed successfully',
                 data:close

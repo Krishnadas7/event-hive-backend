@@ -1,4 +1,5 @@
 import mongoose,{Document,Model,Schema,Types} from "mongoose";
+import { ICompany } from "./company";
 
 export interface IEvent{
     _id?:string;
@@ -18,4 +19,5 @@ export interface IEvent{
     is_block?:boolean;
     event_poster?:string;
     company_id?:Types.ObjectId; 
+    companyDetails?:ICompany;
 }

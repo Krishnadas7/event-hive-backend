@@ -2,6 +2,7 @@ import { IAdminRepository } from "../../interface/repository/IadminRepository";
 import Ijwt from "../../interface/services/Ijwt";
 import jwt from 'jsonwebtoken'
 import AdminModel from "../../../infrastructureLayer/database/model/adminModel";
+import { JwtPayload } from "jsonwebtoken";
 
 export const adminRefreshToken = async (
     adminRepository:IAdminRepository,
@@ -9,8 +10,8 @@ export const adminRefreshToken = async (
     incomingRefreshToken:string
 ) =>{
   try {
-    const accessTokenKey : any = process.env.ACCESS_TOKEN_KEY
-      const refreshTokenKey : any = process.env.REFRESH_TOKEN_KEY
+    const accessTokenKey  = process.env.ACCESS_TOKEN_KEY
+      const refreshTokenKey  = process.env.REFRESH_TOKEN_KEY
       if (!incomingRefreshToken) {
         console.log('from error incoming refreshtoken');
         return {
@@ -19,7 +20,7 @@ export const adminRefreshToken = async (
             message:'token is not valid'
         }
     }
-    const decoded:any = jwt.verify(incomingRefreshToken, refreshTokenKey)
+    const decoded = jwt.verify(incomingRefreshToken, refreshTokenKey as string) as JwtPayload
     const user = await AdminModel.findOne({_id:decoded.id})
     if(!user){
       return {

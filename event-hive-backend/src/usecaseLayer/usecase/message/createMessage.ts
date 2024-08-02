@@ -2,6 +2,7 @@ import { IResponse } from './../../interface/services/Iresponse';
 import { IMessageRepository } from "../../interface/repository/ImessageRepository";
 import { IUnreadRepository } from '../../interface/repository/IunreadRepository';
 import conversationModel from '../../../infrastructureLayer/database/model/conversatoinModel';
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const createMessage = async (
         messageRepository:IMessageRepository,
@@ -21,7 +22,7 @@ export const createMessage = async (
         const receiverId = conversation?.members?.find((id)=>id!=sender)
         const notification = await unreadRepository.addChatNotification(sender, receiverId as string)
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:'new message is created',
             data:newMessage

@@ -2,6 +2,7 @@ import ErrorResponse from "../../handler/errorResponse";
 import { IUserRepository } from "../../interface/repository/IuserRepository";
 import INodemailer from "../../interface/services/Inodemailer";
 import { IResponse } from "../../interface/services/Iresponse";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 
 export const verifyEmail = async (
@@ -19,7 +20,7 @@ export const verifyEmail = async (
       const verify = await nodemailer.sendEmailVerification(email, first_name);
   
       return {
-        status: 200,
+        status: StatusCodes.OK,
         success: true,
         message: verify,
       };

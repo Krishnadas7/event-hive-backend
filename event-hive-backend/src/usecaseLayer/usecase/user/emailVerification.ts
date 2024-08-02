@@ -1,6 +1,7 @@
 import ErrorResponse from "../../handler/errorResponse";
 import INodemailer from "../../interface/services/Inodemailer";
 import { IResponse } from "../../interface/services/Iresponse";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const emailVeification = async (
     nodemailer: INodemailer,
@@ -14,7 +15,7 @@ export const emailVeification = async (
       const verify = await nodemailer.verifyEmail(otp, email);
     if (verify) {
       return {
-        status: 200,
+        status: StatusCodes.OK,
         success: true,
         message: "Succesfully logged In",
       };

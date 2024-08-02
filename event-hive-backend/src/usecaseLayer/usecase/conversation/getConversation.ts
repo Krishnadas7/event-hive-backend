@@ -1,5 +1,8 @@
 import { IResponse } from "../../interface/services/Iresponse";
 import { IConversationRepostitory } from "../../interface/repository/IconversationRepository";
+import ErrorResponse from "../../handler/errorResponse";
+import { StatusCodes } from "../../../utils/statusCodes"
+
 export const getConversation = async (
     userId:string,
     conversationRepository:IConversationRepostitory
@@ -8,18 +11,13 @@ export const getConversation = async (
         const conversation  = await conversationRepository.getConversation(userId)
         if(conversation){
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:'new conversations',
             data:conversation
         }
     }
-    return {
-        status:401,
-        success:false,
-        message:'no conversation',
-    }
-    //  throw ErrorResponse.badRequest('invaild')
+    throw ErrorResponse.badRequest('error in conversation')
     } catch (error) {
         throw error
     }

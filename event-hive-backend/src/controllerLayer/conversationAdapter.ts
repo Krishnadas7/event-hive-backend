@@ -9,13 +9,14 @@ constructor(conversationusecase:ConversationUseCase){
  async addConversation(req:Req,res:Res,next:Next){
       try {
         const newConversation = await this.conversationusecase.addConversation(req.body)
+        console.log(newConversation,'newccc')
         res.status(newConversation.status).json({
           success:newConversation.success,
           message:newConversation.message,
           data:newConversation.data
         })
       } catch (error) {
-        
+        next(error)
       }
  }
  async getConversation(req: Req,res: Res,next: Next){

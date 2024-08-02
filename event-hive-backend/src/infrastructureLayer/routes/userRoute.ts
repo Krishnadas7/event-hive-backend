@@ -77,10 +77,6 @@ router.post('/token-validation',(req: Request,res: Response, next: NextFunction)
   userAdapter.tokenValidation(req,res,next)
 })
 
-
-router.get('/profile',(req: Request, res: Response, next: NextFunction)=>{
-  return res.json({status:200,success:true,message:'this is user profile'})
-})
 router.post('/profile-update',AuthMiddleware.protectUser,(req: Request, res: Response, next: NextFunction)=>{
 userAdapter.profileUpdate(req,res,next)
 }
@@ -102,7 +98,6 @@ router.get('/event-for-users',AuthMiddleware.protectUser,async(req: Request, res
   eventAdapter.userEventList(req,res,next)
 })
 router.get('/selected-event',AuthMiddleware.protectUser,async(req: Request, res: Response,next: NextFunction)=>{
-  console.log('qurry id',req.query.eventId)
   eventAdapter.selectedEvent(req,res,next)
 })
 router.get('/search-event',AuthMiddleware.protectUser,async(req: Request, res: Response,next: NextFunction)=>{
@@ -112,7 +107,6 @@ router.get('/filter-events',AuthMiddleware.protectUser,async(req: Request, res: 
   eventAdapter.filterEvents(req,res,next)
 })
 router.post('/ticket-booking',AuthMiddleware.protectUser,async(req: Request,res : Response,next: NextFunction)=>{
-  console.log('ticket booking')
   bookingAdapter.ticketBooking(req,res,next)
 })
 router.post('/weebhook',async(req: Request,res : Response,next: NextFunction)=>{
@@ -132,7 +126,7 @@ router.get('/live-checking',async(req: Request,res : Response,next: NextFunction
 router.get('/live-listing',AuthMiddleware.protectUser,async(req: Request,res : Response,next: NextFunction)=>{
   bookingAdapter.liveListing(req,res,next)
 })
-router.get('/user-notification',AuthMiddleware.protectUser,async(req: Request,res : Response,next: NextFunction)=>{
+router.get('/user-notification',async(req: Request,res : Response,next: NextFunction)=>{
   userAdapter.getNotification(req,res,next)
 })
 router.get('/landing-page-event-count',async(req: Request,res : Response,next: NextFunction)=>{

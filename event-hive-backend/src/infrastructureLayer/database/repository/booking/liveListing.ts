@@ -8,7 +8,7 @@ export const liveListing = async(
 )=>{
     try {
         const date = new Date();
-          const live:any = await bookingModels.aggregate([
+          const live = await bookingModels.aggregate([
             {$match:{user_id:new ObjectId(userId)}},
             {$lookup:{
                 from:'events',

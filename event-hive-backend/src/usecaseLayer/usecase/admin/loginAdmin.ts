@@ -29,18 +29,18 @@ password:string
        const responseData : StoreData ={
         _id:admin._id,
         name:admin.name,
-        email:admin.email
+        email:admin.email,
+        adminAccessToken:accessToken,
+        adminRefreshToken:refreshToken,
        }
        return {
         status:200,
         success:true,
         data:responseData,
-        adminAccessToken:accessToken,
-        adminRefreshToken:refreshToken,
         message:`login successfully welcome ${admin.name}`
        }
       }
-      throw ErrorResponse.badRequest("wrong password or email")
+      throw ErrorResponse.badRequest("enter proper password")
     }
     throw ErrorResponse.badRequest("wrong password or email")
  } catch (error) {

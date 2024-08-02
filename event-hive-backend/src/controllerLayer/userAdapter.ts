@@ -19,13 +19,6 @@ export class UserAdapter {
                  message: newUser.message,
                  user: newUser.data,
              });
-         } else {
-             console.error('Failed to create user or user data is missing.');
-             res.status(500).json({
-                 success: false,
-                 message: 'Failed to create user or user data is missing.',
-                 user: null,
-             });
          }
      } catch (error) {
          next(error);
@@ -40,13 +33,13 @@ export class UserAdapter {
         res.cookie("userAccessToken", user.userAccessToken, {
           httpOnly:true,
           secure:true,
-          sameSite: "none",
+          sameSite: "strict",
           maxAge:  900000
       });
           res.cookie("userRefreshToken", user.userRefreshToken, {
               httpOnly: true,
               secure:true,
-              sameSite: "none",
+              sameSite: "strict",
               maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days for refreshToken
           });
       }
@@ -208,7 +201,8 @@ async googleAuth (req:Req,res:Res,next:Next){
         const passwordUpdated = await this.userusecase.resetPassword(req.body)
         res.status(passwordUpdated.status).json({
         success:passwordUpdated.success,
-        message:passwordUpdated.message
+        message:passwordUpdated.message,
+        data:passwordUpdated.data
         })
       } catch (error) {
         next(error)
@@ -243,8 +237,8 @@ async googleAuth (req:Req,res:Res,next:Next){
     }
     async userData (req: Req,res: Res,next: Next){
       try {
-        const email : any= req.query.email 
-        const user = await this.userusecase.userData(email)
+        const email = req.query.email 
+        const user = await this.userusecase.userData(email as string)
         res.status(user.status).json({
           success:user.success,
           message:user.message,
@@ -256,8 +250,8 @@ async googleAuth (req:Req,res:Res,next:Next){
     }
     async getRandomUser (req: Req,res: Res,next: Next){
       try {
-        const userId : any= req.query.userId 
-        const user = await this.userusecase.getRandomUser(userId)
+        const userId = req.query.userId 
+        const user = await this.userusecase.getRandomUser(userId as string)
         res.status(user.status).json({
           success:user.success,
           message:user.message,

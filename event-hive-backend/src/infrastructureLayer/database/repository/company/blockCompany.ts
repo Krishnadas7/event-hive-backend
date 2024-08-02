@@ -5,9 +5,11 @@ export const blockCompany = async (
     companyModel:typeof CompanyModel
 ) =>{
   try {
-    const companyBlocked:any = await companyModel.findOne({_id:companyId})
-    companyBlocked.is_block=!companyBlocked?.is_block
-    companyBlocked.save()
+    const companyBlocked = await companyModel.findOne({_id:companyId})
+    if(companyBlocked && companyBlocked.is_block && !companyBlocked.is_block){
+      companyBlocked.is_block=!companyBlocked?.is_block
+      companyBlocked.save()
+    }
     return true
   } catch (error) {
     throw error

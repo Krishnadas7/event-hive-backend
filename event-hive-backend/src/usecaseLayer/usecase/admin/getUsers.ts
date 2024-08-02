@@ -1,3 +1,4 @@
+import { IUser } from "../../../domainLayer/user";
 import UserModel from "../../../infrastructureLayer/database/model/userModel";
 import { IUserResponse } from "../../interface/services/Iresponse";
 import { Is3bucket } from '../../interface/services/Is3Services';
@@ -9,14 +10,14 @@ export const getUsers = async (
 ): Promise<IUserResponse> => {
     try {
         const users = await UserModel.find();
-        const urlPromises = users.map(async (user: any) => {
+        const urlPromises = users?.map(async (user: IUser) => {
             console.log('user profile image', user.profileImage);
             try {
                 const url = await s3service.getImages(s3, user.profileImage as string);
                 user.profileImage = url;
             } catch (err) {
                 console.error(`Failed to get pre-signed URL for image ${user.profileImage}:`, err);
-                user.profileImage = null; // Or handle it appropriately based on your requirements
+                user.profileImage = ''; // Or handle it appropriately based on your requirements
             }
         });
         await Promise.all(urlPromises);
@@ -28,8 +29,7 @@ export const getUsers = async (
             data: users,
             message: 'Users fetched'
         };
-    } catch (error:any) {
-        console.error(`Error fetching users:`, error);
-        throw new Error(`Error fetching users: ${error.message}`);
+    } catch (error) {
+        throw error
     }
 };

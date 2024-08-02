@@ -14,6 +14,10 @@ export interface StoreData{
     socialmedialink1?:string;
     socialmedialink2?:string;
     profileImg?:string;
+    userAccessToken?:string;
+    userRefreshToken?:string;
+    adminAccessToken?:string;
+    adminRefreshToken?:string,
 }
 export interface EventStoreData{
     _id?:string;
@@ -51,6 +55,8 @@ export interface CompanyData{
     _id?:string;
     company_name?:string;
     company_email?:string;
+    companyAccessToken?:string;
+    companyRefreshToken?:string;
 }
 export interface BookingData{
     _id?: string;                    
@@ -78,7 +84,7 @@ export interface ICONdata<T = ConversationData| string>{
     message?:string,
     data?:T
 }
-export interface ICResponse<T= CompanyData | string>{
+export interface ICResponse<T= CompanyData | string|unknown>{
     status:number,
     success: boolean,
     message?:string,
@@ -92,10 +98,10 @@ export interface IResponse<T = StoreData | number | string | ConversationData | 
   message ?: string,
   data?: T,
   password?:string,
-  userAccessToken?:any,
-  userRefreshToken? : any,
-  adminAccessToken?:any,
-  adminRefreshToken?:any
+  userAccessToken?:string,
+  userRefreshToken? : string,
+  adminAccessToken?:string,
+  adminRefreshToken?:string
 }
 
 export interface IUserResponse<T = IUser|IUser[]|string>{

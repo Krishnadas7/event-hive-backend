@@ -7,6 +7,7 @@ import ErrorResponse from "../../handler/errorResponse";
 import { IRequestValidator } from "../../interface/repository/IvalidareRepository";
 import { Is3bucket } from "../../interface/services/Is3Services";
 import { S3Client } from "@aws-sdk/client-s3";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 
 export const loginUser = async (
@@ -29,11 +30,11 @@ export const loginUser = async (
         const user: IUser | null = await userRepository.findUser(email)
         if (user && user._id) {
             if (user.is_block) {
-                throw ErrorResponse.badRequest('your account is blocked')
+                throw ErrorResponse.badRequest('You are corrently blocked');
             }
             const match:boolean = await bcrypt.compare(password,user.password)
             if(match){
-            const { accessToken, refreshToken }:any =await jwt.createJWT(user._id, user.email as string, "user", user.first_name as string);
+            const { accessToken, refreshToken } =await jwt.createJWT(user._id, user.email as string, "user", user.first_name as string);
             const userId = user._id.toString()
             let url:string=''
             if(user.profileImage!==''){
@@ -46,14 +47,14 @@ export const loginUser = async (
                 _id: user._id,
                 name: user.first_name,
                 email: user.email as string,
-                profileImg:url
+                profileImg:url,
+                userAccessToken: accessToken,
+                userRefreshToken: refreshToken,
             }
 
             return {
-                status: 200,
+                status: StatusCodes.OK,
                 success: true,
-                userAccessToken: accessToken,
-                userRefreshToken: refreshToken,
                 data: responseData,
                 message: `Login successful, welcome ${user.first_name}`
             }

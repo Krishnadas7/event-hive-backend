@@ -3,6 +3,9 @@ import { IEventRepository } from "../../interface/repository/IeventRepository"
 import { Is3bucket } from "../../interface/services/Is3Services"
 import INodemailer from "../../interface/services/Inodemailer"
 import { IResponse } from "../../interface/services/Iresponse"
+import ErrorResponse from "../../handler/errorResponse"
+import { StatusCodes } from "../../../utils/statusCodes"
+
 
 export const sendBulkEmail = async (
   eventRepository:IEventRepository,
@@ -13,18 +16,17 @@ export const sendBulkEmail = async (
    try {
       const participants = await eventRepository.findParticipants(eventId)
       if(participants.length>0){
-        const sendEmail = await nodemailer.sendBulkEmail(participants,'hello this from event startign','heyy ur received any email',url)
+        const sendEmail = await nodemailer.sendBulkEmail(participants,
+          'We are excited to announce that your registered event is starting now! Join us for an exciting session filled with insights, discussions, and networking opportunities',
+          'To join the event, simply click on the link above or log in to your account on our platform. We recommend joining a few minutes early to ensure you dont miss any of the action',
+          url)
         return{
-          status:200,
+          status:StatusCodes.OK,
           success:true,
           message:sendEmail
         }
       }
-      return{
-        status:200,
-        success:true,
-        message:'no participants'
-      }
+      throw ErrorResponse.badRequest('no participants')
       
    } catch (error) {
      throw error

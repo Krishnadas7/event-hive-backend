@@ -1,6 +1,6 @@
 import ErrorResponse from "../../handler/errorResponse";
 import { IUserRepository } from "../../interface/repository/IuserRepository";
-
+import { StatusCodes } from "../../../utils/statusCodes"
 import { IResponse } from "../../interface/services/Iresponse";
 import jwt from 'jsonwebtoken'
 
@@ -11,14 +11,10 @@ forgotToken:string
         console.log('sdsdlksdklsdlk===',forgotToken)
         let valid = jwt.verify(forgotToken,process.env.FORGOT_TOKEN||'')
             if(!valid){
-                return {
-                    status:401,
-                    success:false,
-                    message:'token is expired'
-                }
+                throw ErrorResponse.badRequest('token expired')
             }
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:'token is there'
         }

@@ -5,9 +5,9 @@ import {Types} from 'mongoose'
 export const selectedEvent = async (
     eventId:string,
     eventModels:typeof EventModel
-):Promise<IEvent> =>{
+) =>{
  try {
-    const event : any= await eventModels.aggregate([
+    const event = await eventModels.aggregate([
         {
             $match: {
                 _id:new Types.ObjectId(eventId) // Assuming _id is of type ObjectId
@@ -20,7 +20,7 @@ export const selectedEvent = async (
             as:'companyDetails'
         }}
     ])
- return event
+    return event.length > 0 ? event[0] : null;
 
  } catch (error) {
     throw error

@@ -2,6 +2,8 @@ import ErrorResponse from "../../handler/errorResponse";
 import { IEventRepository } from "../../interface/repository/IeventRepository";
 import { Is3bucket } from "../../interface/services/Is3Services";
 import { S3Client } from "@aws-sdk/client-s3";
+import { StatusCodes } from "../../../utils/statusCodes"
+
 
 export const selectedEvent = async (
     eventRepository:IEventRepository,
@@ -12,17 +14,16 @@ export const selectedEvent = async (
     try {
         const event = await eventRepository.selectedEvent(eventId)
         const url = await s3service.getImages(s3,eventId)
-        event[0].event_poster = url
-        console.log('=event===jjjjj',event)
+        event.event_poster = url
         if(event){
             return {
-             status:200,
+             status:StatusCodes.OK,
              success:true,
              message:'selected event',
              data:event
             }
         }
-        throw ErrorResponse.badRequest('no seleced even')
+        throw ErrorResponse.badRequest('wrong in selected event')
     } catch (error) {
         throw error
     }

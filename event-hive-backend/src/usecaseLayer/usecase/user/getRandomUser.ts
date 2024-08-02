@@ -1,6 +1,7 @@
 import ErrorResponse from "../../handler/errorResponse";
 import { IUserRepository } from "../../interface/repository/IuserRepository";
 import { IResponse, StoreData } from "../../interface/services/Iresponse";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const getRandomUser = async (
  userRepository :IUserRepository,
@@ -22,7 +23,7 @@ export const getRandomUser = async (
 
         }
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:'this is userdata',
             data:responsedata

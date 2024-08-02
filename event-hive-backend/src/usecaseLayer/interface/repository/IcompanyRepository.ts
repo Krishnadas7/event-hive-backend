@@ -21,7 +21,7 @@ export interface ICompanyRepository{
         company_contactperson:string,
         company_contactphone:string,
         industry_type:string
-    ):Promise<ICompany>;
-    getAllCompany():Promise<any>;
+    ):Promise<unknown>;
+    getAllCompany():Promise<ICompany[]>;
     blockCompany(companyId:string):Promise<boolean>;
 }

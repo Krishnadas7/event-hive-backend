@@ -18,6 +18,7 @@ import { eventCount } from "./event/eventCounts";
 import { liveEventCount } from "./event/liveEventCount";
 import { piechartData } from "./event/piechartData";
 import { checkingUserExist } from "./event/chekingUserExist";
+import { PData } from "../../../utils/typeDatas";
 
 export class EventRepository implements IEventRepository{
     constructor(private readonly eventModels:typeof EventModel){}
@@ -27,19 +28,19 @@ export class EventRepository implements IEventRepository{
     async uploadProfileImage(image:string,id:string):Promise<Boolean>{
         return  updatePosterName(image,id,this.eventModels)
     }
-    async getEventWithCompany(): Promise<any> {
+    async getEventWithCompany():Promise<IEvent[]> {
         return getEventWithCompany(this.eventModels)
     }
     async blockEvent(eventId: string): Promise<boolean> {
         return blockEvent(eventId,this.eventModels)
     }
-    async getEvent(companyId: string): Promise<any> {
+    async getEvent(companyId: string): Promise<IEvent[]> {
         return getEvent(companyId,this.eventModels)
     }
     async userEventList(pagination:number): Promise<IEvent[]> {
         return userEventList(pagination,this.eventModels)
     }
-    async selectedEvent(eventId: string): Promise<any> {
+    async selectedEvent(eventId: string): Promise<IEvent> {
         return selectedEvent(eventId,this.eventModels)
     }
     async  searchEvent(search: string): Promise<IEvent[]> {
@@ -51,13 +52,13 @@ export class EventRepository implements IEventRepository{
     async liveEvents(companyId: string): Promise<IEvent[]> {
         return liveEvents(companyId,this.eventModels)
     }
-    async allMembers(eventId: string): Promise<any> {
+    async allMembers(eventId: string): Promise<unknown> {
         return allMembers(eventId,this.eventModels)
     }
     async closeEvent(eventId: string): Promise<boolean> {
         return closeEvent(eventId,this.eventModels)
     }
-     async findParticipants(eventId: string): Promise<any> {
+     async findParticipants(eventId: string): Promise<string[]> {
         return findParticipants(eventId,this.eventModels)
     }
     async eventCount(): Promise<number> {
@@ -66,7 +67,7 @@ export class EventRepository implements IEventRepository{
     async liveEventCount(): Promise<number> {
         return liveEventCount(this.eventModels)
     }
-    async piechartData(): Promise<any> {
+    async piechartData() {
         return piechartData(this.eventModels)
     }
     async checkingUserExist(userId: string,eventId:string): Promise<boolean> {

@@ -4,6 +4,16 @@ import ErrorResponse from '../../handler/errorResponse';
 import { IUnreadRepository } from '../../interface/repository/IunreadRepository';
 import conversationModel from '../../../infrastructureLayer/database/model/conversatoinModel';
 import jwt from 'jsonwebtoken'
+import { JwtPayload } from 'jsonwebtoken';
+import { StatusCodes } from "../../../utils/statusCodes"
+
+
+// Define the interface for your JWT payload
+interface CustomJwtPayload extends JwtPayload {
+  id: string;
+}
+
+
 export const getMessage = async (
     messageRepository:IMessageRepository,
     unreadRepository:IUnreadRepository,
@@ -12,23 +22,18 @@ export const getMessage = async (
 ):Promise<IResponse>=>{
     try {
         const message = await messageRepository.getMessage(conversationId)
-        console.log('usss========================================',userToken);
+        console.log('usss========================================',message);
         
-        const decoded:any =await  jwt.verify(userToken,'refreshtokenkey123',(err,res)=>{
-            if(err){
-                throw ErrorResponse.badRequest('token not verified')
-            }
-            return res
-        })
+        const decoded =await  jwt.verify(userToken,'refreshtokenkey123') as CustomJwtPayload;
         const conversation = await conversationModel.findOne({_id:conversationId})
         if(decoded){
             const receiverId = conversation?.members?.find((id)=>id!=decoded.id)
             const deleteCount = await unreadRepository.removeChatNotification(receiverId as string,decoded.id)
         }
-        
+        console.log('messages',message)
         if(message){
             return {
-                status:200,
+                status:StatusCodes.OK,
                 success:true,
                 message:'message',
                 data:message
@@ -37,6 +42,7 @@ export const getMessage = async (
 
         throw ErrorResponse.badRequest('no message is left')
     } catch (error) {
+        console.log('error in message',error)
         throw error
     }
     

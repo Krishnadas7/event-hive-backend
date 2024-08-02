@@ -1,6 +1,7 @@
 import { IReport,IReportItem } from "../../../domainLayer/report";
 import ErrorResponse from "../../handler/errorResponse";
 import { IReportRepository } from "../../interface/repository/IReportRepository";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const createReport = async (
     userEmail:string,
@@ -17,7 +18,7 @@ export const createReport = async (
      const reportData = await reportRepository.createReport(obj)
      if(reportData){
         return {
-            status : 200,
+            status : StatusCodes.OK,
             success : true,
             message : 'your report receiver our website',
             data:reportData

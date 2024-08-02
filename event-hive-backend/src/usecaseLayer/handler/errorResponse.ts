@@ -1,3 +1,5 @@
+import { StatusCodes } from "../../utils/statusCodes";
+
 class ErrorResponse extends Error {
     status: number;
     message: string;
@@ -9,23 +11,23 @@ class ErrorResponse extends Error {
     }
   
     static badRequest(msg: string): ErrorResponse {
-      return new ErrorResponse(400, msg);
+      return new ErrorResponse(StatusCodes.BAD_REQUEST, msg);
     }
   
     static unauthorized(msg: string): ErrorResponse {
-      return new ErrorResponse(401, msg);
+      return new ErrorResponse(StatusCodes.UNAUTHORIZED, msg);
     }
   
     static forbidden(msg: string): ErrorResponse {
-      return new ErrorResponse(403, msg);
+      return new ErrorResponse(StatusCodes.FORBIDDEN, msg);
     }
   
     static notFound(msg: string = "Not found"): ErrorResponse {
-      return new ErrorResponse(404, msg);
+      return new ErrorResponse(StatusCodes.NOT_FOUND, msg);
     }
   
     static internalError(msg: string): ErrorResponse {
-      return new ErrorResponse(500, msg);
+      return new ErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, msg);
     }
   }
   

@@ -3,6 +3,7 @@ import ErrorResponse from "../../handler/errorResponse";
 import { IBookingRepository } from "../../interface/repository/IbookingRepository";
 import { Is3bucket } from '../../interface/services/Is3Services';
 import { S3Client } from "@aws-sdk/client-s3";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 
 export const liveListing = async(
@@ -12,15 +13,18 @@ export const liveListing = async(
     userId:string
 ) =>{
  try {
-        const live:IBooking[] = await bookingRepository.liveListing(userId)
-        const urlPromise = live.map(async(details)=>{
-        const url = await s3service.getImages(s3,details.eventDetails.event_poster as string)
-                    details.eventDetails.event_poster = url
+        const live = await bookingRepository.liveListing(userId)
+        const urlPromise = live?.map(async(details)=>{
+            if(details && details.eventDetails){
+                const url = await s3service.getImages(s3,details.eventDetails.event_poster as string)
+                details.eventDetails.event_poster = url
+            }
+        
         })
         await Promise.all(urlPromise)
         if(live){
             return {
-                status:200,
+                status:StatusCodes.OK,
                 success:true,
                 message:'datas',
                 data:live

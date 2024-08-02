@@ -12,7 +12,6 @@ router.post('/login',(req:Request,res:Response,next:NextFunction)=>{
     companyAdapter.companyLogin(req,res,next)
 })
 router.post('/send-email',(req:Request,res:Response,next:NextFunction)=>{
-    console.log(req.body)
     companyAdapter.sendEmailforCompany(req,res,next)
 })
 router.get('/get-company-profile',AuthMiddleware.protectCompany,(req: Request,res : Response, next: NextFunction) =>{
@@ -38,7 +37,6 @@ router.post('/close-event',(req:Request,res:Response,next:NextFunction) =>{
   eventAdapter.closeEvent(req,res,next)
 })
 router.post('/send-bulk-email',(req:Request,res:Response,next:NextFunction) =>{
-  console.log('sdlkdsklds')
   eventAdapter.sendBulkEmail(req,res,next)
 })
 

@@ -18,7 +18,6 @@ export class ConversationUseCase{
     )
   }
   async getConversation(userId:string){
-    console.log('token from usecase',userId)
     return getConversation(
       userId,
       this.conversationRepository

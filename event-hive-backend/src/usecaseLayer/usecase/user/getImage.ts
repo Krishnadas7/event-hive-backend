@@ -1,7 +1,8 @@
 import { Is3bucket } from "../../interface/services/Is3Services"
 import { S3Client } from "@aws-sdk/client-s3"
 import { IUserRepository } from "../../interface/repository/IuserRepository"
-const { ObjectId } = require('mongodb');
+import ErrorResponse from "../../handler/errorResponse";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const getImage = async(
     userRepository:IUserRepository,
@@ -10,17 +11,19 @@ export const getImage = async(
     email:string
 )=>{
   try {
-     const user:any = await userRepository.findUser(email)
-     const userId = user._id.toString()
-     console.log('useridddddd',userId)
-     const url = await s3service.getImages(s3,userId as string)
-     console.log('ulllll=====',url)
-     return {
-        status:200,
-        success:true,
-        message:'message is got',
-        data:url
+     const user = await userRepository.findUser(email)
+     if(user && user._id){
+      const userId = user._id.toString()
+      console.log('useridddddd',userId)
+      const url = await s3service.getImages(s3,userId as string)
+      return {
+         status:StatusCodes.OK,
+         success:true,
+         message:'message is got',
+         data:url
+      }
      }
+    throw ErrorResponse.badRequest('wrong in image showing')
   } catch (error) {
     throw error
   }

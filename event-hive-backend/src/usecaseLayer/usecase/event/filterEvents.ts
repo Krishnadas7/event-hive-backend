@@ -4,6 +4,7 @@ import { IResponse } from "../../interface/services/Iresponse"
 import { Is3bucket } from "../../interface/services/Is3Services"
 import { S3Client } from "@aws-sdk/client-s3"
 import {IEvent} from '../../../domainLayer/event'
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const filterEvents = async(
         eventRepository:IEventRepository,
@@ -23,7 +24,7 @@ export const filterEvents = async(
             })
             await Promise.all(urlPromises)
             return {
-                status:200,
+                status:StatusCodes.OK,
                 success:true,
                 message:'filtered events',
                 data:events

@@ -2,6 +2,7 @@ import { IResponse } from "../../interface/services/Iresponse"
 import { IUserRepository } from "../../interface/repository/IuserRepository"
 import IHashPassword from "../../interface/services/IhashPassword"
 import ErrorResponse from "../../handler/errorResponse"
+import { StatusCodes } from "../../../utils/statusCodes"
 
 
 export const createUser =async (
@@ -29,9 +30,9 @@ export const createUser =async (
      }
      const createnewUser = await userRepository.createUser(newUser)
       return {
-        status : 200,
+        status : StatusCodes.OK,
         success : true,
-        message : `successfully registred welcome new user ${createnewUser.name}`,
+        message : `Account was created ${createnewUser.name}`,
         data:createnewUser
       }
 

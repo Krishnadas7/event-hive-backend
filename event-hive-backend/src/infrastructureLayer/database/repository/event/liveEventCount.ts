@@ -16,7 +16,6 @@ export const liveEventCount = async (
         console.log('liveeeee',liveC)
         return liveC
     } catch (error) {
-        console.log(error)
         throw error
     }
 }

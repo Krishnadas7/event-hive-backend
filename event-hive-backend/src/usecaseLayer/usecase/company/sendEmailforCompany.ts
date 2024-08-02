@@ -5,7 +5,7 @@ import { IRedis } from '../../interface/services/Iredis';
 import INodemailer from '../../interface/services/Inodemailer';
 import { ICResponse } from '../../interface/services/Iresponse';
 import {redisClient}  from "../../../infrastructureLayer/config/redis";
-
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const sendEmailforCompany = async (
     CompanyRepository:ICompanyRepository,
@@ -25,14 +25,11 @@ export const sendEmailforCompany = async (
         const companyData = await CompanyRepository.findCompany(company_email)
         console.log(companyData)
         if(companyData){
-           return {
-            status:200,
-            success:false,
-            message:'email already exists'
-           }
+           throw ErrorResponse.badRequest('email already exists')
         }
-        if(!companyData){
+        
         const sendEmailOtp = await nodemailer.sendEmailForCompanyRegistration(company_email,company_name)
+        console.log(sendEmailOtp,'bakckd snd mail')
         const hashedPassword = await bcrypt.createHash(password)
         let obj={
             company_name,
@@ -45,19 +42,13 @@ export const sendEmailforCompany = async (
             otp:sendEmailOtp
         }
         const dataStoring = await redisClient.set('companyData', JSON.stringify({...obj}), 'EX', 300);
-
-        console.log(dataStoring,'data storing')
-        const dataFromRedis = await redisClient.get('companyData')
-     let datas:any = JSON.parse(dataFromRedis as any)
-     console.log('redis data',datas)
         return {
-            status:200,
-            success:true
+            status:StatusCodes.OK,
+            success:true,
+            message:'check your email'
         }
-    }
-    throw ErrorResponse.badRequest('something went wrong')
+    
     } catch (error) {
-        console.log('error from company sendemail usecase',error)
         throw error
     }
    

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { UserRepository } from '../database/repository/userRepository';
 import { AdminRepository } from '../database/repository/adminRepository';
@@ -9,6 +9,7 @@ import AdminModel from '../database/model/adminModel';
 import CompanyModel from '../database/model/companyModel';
 import { IAdmin } from '../../domainLayer/admin';
 import { ICompany } from '../../domainLayer/company';
+
 
 
 declare global {
@@ -32,8 +33,12 @@ class AuthMiddleware {
         const accessTokenSecret = process.env.ACCESS_TOKEN_KEY as string
         console.log('accesskeyy',accessTokenSecret);
         try {
-        const decoded : any = jwt.verify(token, accessTokenSecret)
+        const decoded  = jwt.verify(token, accessTokenSecret) as JwtPayload
             const user: IUser|null = await UserModel.findOne({email:decoded.email});
+            if(user && user.is_block){
+              res.status(403).json({ error: 'Unauthorized3' });
+              return
+            }
             if (!user) {
                res.status(401).json({ error: 'Unauthorized3' });
             }
@@ -51,11 +56,9 @@ class AuthMiddleware {
        }
        const accessTokenSecret = process.env.ACCESS_TOKEN_KEY as string
        try {
-        const decoded : any = jwt.verify(token,accessTokenSecret)
+        const decoded  = jwt.verify(token,accessTokenSecret) as JwtPayload
         console.log('decoded form ===========',decoded)
         const user: IAdmin|null = await AdminModel.findOne({_id:decoded.id})
-        console.log('usrrrr',user);
-        
         if(!user){
           res.status(401).json({ error: 'Unauthorized3' });
         }
@@ -75,7 +78,7 @@ class AuthMiddleware {
       }
       const accessTokenSecret = process.env.ACCESS_TOKEN_KEY as string
       try {
-       const decoded : any = jwt.verify(token,accessTokenSecret)
+       const decoded  = jwt.verify(token,accessTokenSecret) as JwtPayload
        console.log('decoded form ===========',decoded)
        const company: ICompany|null = await CompanyModel.findOne({_id:decoded.id})
        console.log('compnyy',company);

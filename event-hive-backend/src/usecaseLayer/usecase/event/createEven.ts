@@ -4,8 +4,10 @@ import { S3Client } from "@aws-sdk/client-s3";
 import ErrorResponse from "../../handler/errorResponse";
 import { IEvent } from "../../../domainLayer/event";
 import { IEventRepository } from "../../interface/repository/IeventRepository";
-import mongoose,{Types} from "mongoose";
+import {Types} from "mongoose";
 import { ObjectId } from 'mongodb';
+import { StatusCodes } from "../../../utils/statusCodes"
+
 export const createEvent = async (
         eventRepository:IEventRepository,
         s3service:Is3bucket,
@@ -41,24 +43,22 @@ export const createEvent = async (
         amount
       }
       const newEvent = await eventRepository.createEvent(event)
+      
       if(newEvent._id){
         const objectId = new ObjectId(newEvent._id);
-        const name:any = objectId.toHexString();
+        const name = objectId.toHexString();
         const imageUpload = await s3service.profileImageUpdate(s3,event_poster,name as string)
         const posterName = await eventRepository.uploadProfileImage(imageUpload,name)
+        console.log(newEvent,imageUpload,posterName)
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:`event created successfully`,
-            data:newEvent as any
+            data:newEvent 
         }
         
       }
-      return {
-        status:400,
-        success:false,
-        message:`event creation failed`,
-    }
+      throw ErrorResponse.badRequest('something wrong')
   } catch (error) {
      throw error
   }

@@ -8,7 +8,7 @@ export const liveChecking = async (
 ) =>{
    try {
     const date = new Date();
-      const live:any = await bookingModels.aggregate([
+      const live = await bookingModels.aggregate([
         {$match:{user_id:new ObjectId(userId)}},
         {$lookup:{
             from:'events',
@@ -35,8 +35,10 @@ export const liveChecking = async (
          },
         
       ])
+      console.log(live.length)
       return live.length
    } catch (error) {
+      console.log(error,'errror in live')
     throw error
    }
 }

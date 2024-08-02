@@ -15,25 +15,26 @@ export const updateCompanyProfile = async (
     company_contactphone: string, 
     industry_type: string,
     companyModels:typeof CompanyModel
-) =>{
+):Promise<ICompany|null> =>{
     try {
-        const company:any = await companyModels.findOne({company_email:company_email})
+        const company = await companyModels.findOne({company_email:company_email})
     if(company){
         company.company_name=company_name
         company.company_email=company_email
         company.company_address=company_address
         company.state=state
         company.postal_code=postal_code
-        company.coutnry=country
+        company.country=country
         company.company_website=company_website
         company.locality=locality
         company.company_description=company_description
         company.contact_personname=company_contactperson
         company.contact_personphone=company_contactphone
         company.industry_type=industry_type
-        company.save()
+        await company.save()
+        return company
     } 
-    return company
+    return null
     } catch (error) {
         throw error
     }

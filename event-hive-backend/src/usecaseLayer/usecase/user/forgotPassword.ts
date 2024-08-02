@@ -3,6 +3,7 @@ import { IUserRepository } from "../../interface/repository/IuserRepository";
 import IHashPassword from "../../interface/services/IhashPassword";
 import Ijwt from "../../interface/services/Ijwt";
 import { IResponse } from "../../interface/services/Iresponse";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const forgotPassword = async (
     userRepository: IUserRepository,
@@ -21,7 +22,7 @@ export const forgotPassword = async (
 
           const token = jwt.createJWT(forgotUser._id as string, forgotUser.email as string, "user", forgotUser.name as string);
           return {
-            status: 200,
+            status: StatusCodes.OK,
             success: true,
             message: `Successfully Forgot Password Welcome ${forgotUser.name}`,
             data : forgotUser

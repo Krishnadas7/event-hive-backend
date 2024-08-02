@@ -16,13 +16,13 @@ export class AdminAdapter{
              res.cookie('adminAccessToken',user.adminAccessToken,{
                 httpOnly:true,
                 secure:true,
-                sameSite: "none",
+                sameSite: "strict",
                 maxAge:  900000
             })
             .cookie('adminRefreshToken',user.adminRefreshToken,{
                 httpOnly: true,
                 secure:true,
-                sameSite: "none",
+                sameSite: "strict",
                 maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days for refreshToken
             })
             res.status(user.status).json({
@@ -47,7 +47,6 @@ export class AdminAdapter{
                 message:user.message
             })
         } catch (error) {
-            console.log('from error',error);
             
             next(error)
         }
@@ -70,8 +69,6 @@ export class AdminAdapter{
     async userCount(req:Req,res:Res,next:Next){
         try {
             const userC = await this.adminusecase.usersCount()
-            console.log('user count ',userC);
-            
              userC &&
              res.status(userC.status).json({
                 success: userC.success,
@@ -85,7 +82,6 @@ export class AdminAdapter{
     async eventCount(req:Req,res:Res,next:Next){
         try {
             const eventC = await this.adminusecase.eventCount()
-            console.log('event count ',eventC);
             
              eventC &&
              res.status(eventC.status).json({
@@ -100,8 +96,6 @@ export class AdminAdapter{
     async liveEventCount(req:Req,res:Res,next:Next){
         try {
             const liveC = await this.adminusecase.liveEventCount()
-            console.log('event count liveeee',liveC);
-            
             liveC &&
              res.status(liveC.status).json({
                 success: liveC.success,
@@ -115,7 +109,6 @@ export class AdminAdapter{
     async piechartData(req:Req,res:Res,next:Next){
         try {
             const pData = await this.adminusecase.piechartData()
-            console.log('data from piechart',pData);
             
             pData
             &&

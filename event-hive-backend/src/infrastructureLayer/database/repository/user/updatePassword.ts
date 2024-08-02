@@ -6,7 +6,7 @@ export const updatePassword = async (
     userModels:typeof UserModel
 ) =>{
     try {
-      const user:any = await userModels.findOne({email:email})
+      const user = await userModels.findOne({email:email})
        if(user){
          user.password=newPassword
         user.save()

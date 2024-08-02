@@ -9,7 +9,7 @@ export class MessageRepository implements IMessageRepository{
      async createMessage(message:IMessages): Promise<IMessages> {
         return createMessage(message,this.messageModels)
     }
-    async getMessage(conversationId: string): Promise<any> {
+    async getMessage(conversationId: string): Promise<unknown> {
         return getMessage(conversationId,this.messageModels)
     }
 }

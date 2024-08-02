@@ -1,4 +1,5 @@
 import { Next,Res,Req } from "../infrastructureLayer/types/expressTypes";
+import ErrorResponse from "../usecaseLayer/handler/errorResponse";
 import { CompanyUseCase } from "../usecaseLayer/usecase/companyuseCase";
 
 export class CompanyAdapter{
@@ -17,13 +18,8 @@ export class CompanyAdapter{
                 message:newCompany.message,
                 company:newCompany.data
                })
-            }else{
-              res.status(500).json({
-                success:false,
-                message:'failed to create company',
-                company:null
-              })
             }
+            
         } catch (error) {
             next(error)
         }
@@ -32,13 +28,13 @@ export class CompanyAdapter{
         try {
             const company = await this.companyusecase.companyLogin(req.body)
             if(company){
-                res.cookie("companyAccessToken", company.companyAccessToken, {
+                res.cookie("companyAccessToken", company.data.companyAccessToken, {
                     httpOnly:true,
                     secure:true,
                     sameSite: "none",
                     maxAge:  900000
                 });
-                    res.cookie("companyRefreshToken", company.companyRefreshToken, {
+                    res.cookie("companyRefreshToken", company.data.companyRefreshToken, {
                         httpOnly: true,
                         secure:true,
                         sameSite: "none",
@@ -49,8 +45,6 @@ export class CompanyAdapter{
                 success: company.success,
                 data: company.data,
                 message: company.message,
-                companyAccessToken:company.companyAccessToken,
-                companyRefreshToken:company.companyRefreshToken
             });
         } catch (error) {
             next(error)
@@ -89,28 +83,31 @@ export class CompanyAdapter{
     async companyProfileUpdate (req: Req,res: Res,next: Next){
         try {
             const companyLogo = req.file
-            const obj:any = {
-             company_name:req.body.company_name,
-             company_email:req.body.company_email,
-             company_address:req.body.company_address,
-             state:req.body.state,
-             postal_code:req.body.postal_code,
-             country:req.body.country,
-             company_website:req.body.company_website,
-             locality:req.body.locality,
-             company_description:req.body.company_description,
-             contact_personname:req.body.contact_personname,
-             contact_personphone:req.body.contact_personphone,
-             industry_type:req.body.industry_type,
-             companyLogo:companyLogo,
-             token:req.body.token
+            if(companyLogo){
+                const obj = {
+                    company_name:req.body.company_name,
+                    company_email:req.body.company_email,
+                    company_address:req.body.company_address,
+                    state:req.body.state,
+                    postal_code:req.body.postal_code,
+                    country:req.body.country,
+                    company_website:req.body.company_website,
+                    locality:req.body.locality,
+                    company_description:req.body.company_description,
+                    contact_personname:req.body.contact_personname,
+                    contact_personphone:req.body.contact_personphone,
+                    industry_type:req.body.industry_type,
+                    companyLogo:companyLogo,
+                    token:req.body.token
+                   }
+                const profileUpdate = await this.companyusecase.companyProfileUpdate(obj)
+                res.status(profileUpdate.status).json({
+                   success:profileUpdate.success,
+                   message:profileUpdate.message,
+                   data:profileUpdate.data
+                })
             }
-         const profileUpdate = await this.companyusecase.companyProfileUpdate(obj)
-         res.status(profileUpdate.status).json({
-            success:profileUpdate.success,
-            message:profileUpdate.message,
-            data:profileUpdate.data
-         })
+            
         } catch (error) {
             next(error)
         }
@@ -135,9 +132,10 @@ export class CompanyAdapter{
     async blockCompany(req: Req,res : Res, next: Next){
         try{
             const companyId = req.body.companyId
-      const blocked:any = await this.companyusecase.blockCompany(companyId)
+      const blocked = await this.companyusecase.blockCompany(companyId)
       res.status(blocked.status).json({
         success:blocked.success,
+        message:blocked.message
       })
         }catch(error){
             next(error)

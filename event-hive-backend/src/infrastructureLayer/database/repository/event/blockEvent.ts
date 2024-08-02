@@ -6,7 +6,7 @@ export const blockEvent = async (
     eventModels:typeof EventModel
 ):Promise<boolean> =>{
     try {
-        const blocked:any= await eventModels.findOne({_id:eventId})
+        const blocked= await eventModels.findOne({_id:eventId})
         if(blocked){
             blocked.is_block = !blocked?.is_block
         blocked.save()

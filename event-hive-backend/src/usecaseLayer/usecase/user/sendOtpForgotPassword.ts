@@ -2,6 +2,7 @@ import ErrorResponse from "../../handler/errorResponse";
 import { IUserRepository } from "../../interface/repository/IuserRepository";
 import INodemailer from "../../interface/services/Inodemailer";
 import { IResponse } from "../../interface/services/Iresponse";
+import { StatusCodes } from "../../../utils/statusCodes"
 
 
 export const sendEmailFogotPassword = async (
@@ -19,7 +20,7 @@ export const sendEmailFogotPassword = async (
         }
         const verify = await nodemailer.sendEmailforForgotPassword(email, name);
         return {
-          status: 200,
+          status: StatusCodes.OK,
           success: true,
           message: verify,
         };

@@ -1,5 +1,5 @@
 import { IBookingRepository } from "../../interface/repository/IbookingRepository";
-
+import { StatusCodes } from "../../../utils/statusCodes"
 
 export const allBookings = async(
   bookingRepository:IBookingRepository,
@@ -8,7 +8,7 @@ export const allBookings = async(
     try {
         const bookings = await bookingRepository.allBookings(userId)
         return {
-            status:200,
+            status:StatusCodes.OK,
             success:true,
             message:'booked events',
             data:bookings
