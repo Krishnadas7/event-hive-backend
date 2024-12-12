@@ -19,7 +19,6 @@
     "@types/node": "^20.12.7",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.14",
-    "@types/stripe": "^8.0.417",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   },
@@ -33,6 +32,7 @@
     "aws-sdk": "^2.1617.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.5.1",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -48,6 +48,7 @@
     "nodemailer": "^6.9.13",
     "react-toastify": "^10.0.5",
     "redis": "^4.6.13",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "stripe": "^16.1.0"
   }
 }

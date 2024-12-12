@@ -1,10 +1,10 @@
 // server.ts
-import { app } from './infrastructureLayer/config/app';
-import dbConnection from './infrastructureLayer/config/db';
-import initSocketServer from './infrastructureLayer/config/socketIoServer';
+import { app } from './infrastructure/config/app';
+import dbConnection from './infrastructure/config/db';
+import initSocketServer from './infrastructure/config/socketIoServer';
 import http from 'http';
-import { Req, Res } from './infrastructureLayer/types/expressTypes';
-import {redisClient} from './infrastructureLayer/config/redis' 
+import { Req, Res } from './infrastructure/types/expressTypes';
+// import {redisClient} from './infrastructure/config/redis' 
 
 // redisClient.get('companyData')
 const PORT = process.env.PORT || 3003; // Ensure the port is correctly set here
@@ -14,7 +14,7 @@ const server = http.createServer(app);
 initSocketServer(server);
 
 const start = () => {
-    app.get('/', (req: Req, res: Res) => {
+    app.get('/api/user', (req: Req, res: Res) => {
         res.send('Project started');
     });
 
